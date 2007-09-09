@@ -1704,7 +1704,7 @@ Constructor for class org.apache.jmeter.monitor.parser.<A HREF="org/apache/jmete
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/control/Controller.html" title="interface in org.apache.jmeter.control"><B>Controller</B></A> - interface org.apache.jmeter.control.<A HREF="org/apache/jmeter/control/Controller.html" title="interface in org.apache.jmeter.control">Controller</A>.<DD>This interface will typically be used in the following manner:
  
- Controller controller; //gets initialized while(!<DT><A HREF="org/apache/jmeter/save/converters/ConversionHelp.html" title="class in org.apache.jmeter.save.converters"><B>ConversionHelp</B></A> - class org.apache.jmeter.save.converters.<A HREF="org/apache/jmeter/save/converters/ConversionHelp.html" title="class in org.apache.jmeter.save.converters">ConversionHelp</A>.<DD>&nbsp;<DT><A HREF="org/apache/jmeter/save/converters/ConversionHelp.html#ConversionHelp()"><B>ConversionHelp()</B></A> - 
+ Controller controller; //gets initialized while(!<DT><A HREF="org/apache/jmeter/save/converters/ConversionHelp.html" title="class in org.apache.jmeter.save.converters"><B>ConversionHelp</B></A> - class org.apache.jmeter.save.converters.<A HREF="org/apache/jmeter/save/converters/ConversionHelp.html" title="class in org.apache.jmeter.save.converters">ConversionHelp</A>.<DD>Utility conversion routines for use with XStream<DT><A HREF="org/apache/jmeter/save/converters/ConversionHelp.html#ConversionHelp()"><B>ConversionHelp()</B></A> - 
 Constructor for class org.apache.jmeter.save.converters.<A HREF="org/apache/jmeter/save/converters/ConversionHelp.html" title="class in org.apache.jmeter.save.converters">ConversionHelp</A>
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/engine/ConvertListeners.html" title="class in org.apache.jmeter.engine"><B>ConvertListeners</B></A> - class org.apache.jmeter.engine.<A HREF="org/apache/jmeter/engine/ConvertListeners.html" title="class in org.apache.jmeter.engine">ConvertListeners</A>.<DD>&nbsp;<DT><A HREF="org/apache/jmeter/engine/ConvertListeners.html#ConvertListeners()"><B>ConvertListeners()</B></A> - 
@@ -3708,9 +3708,6 @@ Static variable in class org.apache.jmeter.gui.action.<A HREF="org/apache/jmeter
 <DT><A HREF="org/apache/jmeter/gui/action/KeyStrokes.html#DEBUG_ON"><B>DEBUG_ON</B></A> - 
 Static variable in class org.apache.jmeter.gui.action.<A HREF="org/apache/jmeter/gui/action/KeyStrokes.html" title="class in org.apache.jmeter.gui.action">KeyStrokes</A>
 <DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/extractor/XPathExtractor.html#DEFAULT"><B>DEFAULT</B></A> - 
-Static variable in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/XPathExtractor.html" title="class in org.apache.jmeter.extractor">XPathExtractor</A>
-<DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/testbeans/BeanInfoSupport.html#DEFAULT"><B>DEFAULT</B></A> - 
 Static variable in class org.apache.jmeter.testbeans.<A HREF="org/apache/jmeter/testbeans/BeanInfoSupport.html" title="class in org.apache.jmeter.testbeans">BeanInfoSupport</A>
 <DD>&nbsp;
@@ -4404,7 +4401,8 @@ Static method in class org.apache.jmeter.protocol.http.util.<A HREF="org/apache/
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/save/converters/ConversionHelp.html#encode(java.lang.String)"><B>encode(String)</B></A> - 
 Static method in class org.apache.jmeter.save.converters.<A HREF="org/apache/jmeter/save/converters/ConversionHelp.html" title="class in org.apache.jmeter.save.converters">ConversionHelp</A>
-<DD>&nbsp;
+<DD>Encode a string (if necessary) for output to a JTL file.
+ 
 <DT><A HREF="org/apache/jmeter/protocol/http/util/Base64Encoder.html#encodeAtom(byte[], int, int)"><B>encodeAtom(byte[], int, int)</B></A> - 
 Static method in class org.apache.jmeter.protocol.http.util.<A HREF="org/apache/jmeter/protocol/http/util/Base64Encoder.html" title="class in org.apache.jmeter.protocol.http.util">Base64Encoder</A>
 <DD>&nbsp;
@@ -4926,9 +4924,6 @@ Method in class org.apache.jmeter.gui.util.<A HREF="org/apache/jmeter/gui/util/T
 <DT><A HREF="org/apache/jmeter/protocol/http/modifier/gui/ParamModifierGui.html#focusGained(java.awt.event.FocusEvent)"><B>focusGained(FocusEvent)</B></A> - 
 Method in class org.apache.jmeter.protocol.http.modifier.gui.<A HREF="org/apache/jmeter/protocol/http/modifier/gui/ParamModifierGui.html" title="class in org.apache.jmeter.protocol.http.modifier.gui">ParamModifierGui</A>
 <DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/protocol/http/proxy/gui/ProxyControlGui.html#focusGained(java.awt.event.FocusEvent)"><B>focusGained(FocusEvent)</B></A> - 
-Method in class org.apache.jmeter.protocol.http.proxy.gui.<A HREF="org/apache/jmeter/protocol/http/proxy/gui/ProxyControlGui.html" title="class in org.apache.jmeter.protocol.http.proxy.gui">ProxyControlGui</A>
-<DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/testbeans/gui/PasswordEditor.html#focusGained(java.awt.event.FocusEvent)"><B>focusGained(FocusEvent)</B></A> - 
 Method in class org.apache.jmeter.testbeans.gui.<A HREF="org/apache/jmeter/testbeans/gui/PasswordEditor.html" title="class in org.apache.jmeter.testbeans.gui">PasswordEditor</A>
 <DD>&nbsp;
@@ -4955,9 +4950,6 @@ Method in class org.apache.jmeter.gui.util.<A HREF="org/apache/jmeter/gui/util/T
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/protocol/http/modifier/gui/ParamModifierGui.html#focusLost(java.awt.event.FocusEvent)"><B>focusLost(FocusEvent)</B></A> - 
 Method in class org.apache.jmeter.protocol.http.modifier.gui.<A HREF="org/apache/jmeter/protocol/http/modifier/gui/ParamModifierGui.html" title="class in org.apache.jmeter.protocol.http.modifier.gui">ParamModifierGui</A>
-<DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/protocol/http/proxy/gui/ProxyControlGui.html#focusLost(java.awt.event.FocusEvent)"><B>focusLost(FocusEvent)</B></A> - 
-Method in class org.apache.jmeter.protocol.http.proxy.gui.<A HREF="org/apache/jmeter/protocol/http/proxy/gui/ProxyControlGui.html" title="class in org.apache.jmeter.protocol.http.proxy.gui">ProxyControlGui</A>
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/testbeans/gui/PasswordEditor.html#focusLost(java.awt.event.FocusEvent)"><B>focusLost(FocusEvent)</B></A> - 
 Method in class org.apache.jmeter.testbeans.gui.<A HREF="org/apache/jmeter/testbeans/gui/PasswordEditor.html" title="class in org.apache.jmeter.testbeans.gui">PasswordEditor</A>
@@ -10792,9 +10784,6 @@ Method in class org.apache.jmeter.protocol.java.sampler.<A HREF="org/apache/jmet
 <DT><A HREF="org/apache/jmeter/visualizers/MonitorHealthVisualizer.html#initModel()"><B>initModel()</B></A> - 
 Method in class org.apache.jmeter.visualizers.<A HREF="org/apache/jmeter/visualizers/MonitorHealthVisualizer.html" title="class in org.apache.jmeter.visualizers">MonitorHealthVisualizer</A>
 <DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/protocol/jdbc/config/DataSourceElement.html#initPool()"><B>initPool()</B></A> - 
-Method in class org.apache.jmeter.protocol.jdbc.config.<A HREF="org/apache/jmeter/protocol/jdbc/config/DataSourceElement.html" title="class in org.apache.jmeter.protocol.jdbc.config">DataSourceElement</A>
-<DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/protocol/jms/sampler/SubscriberSampler.html#initReceiveClient()"><B>initReceiveClient()</B></A> - 
 Method in class org.apache.jmeter.protocol.jms.sampler.<A HREF="org/apache/jmeter/protocol/jms/sampler/SubscriberSampler.html" title="class in org.apache.jmeter.protocol.jms.sampler">SubscriberSampler</A>
 <DD>Create the ReceiveSubscriber client for the sampler.
@@ -13963,9 +13952,6 @@ Static variable in class org.apache.jmeter.protocol.http.sampler.<A HREF="org/ap
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/visualizers/ViewResultsFullVisualizer.html#REDIRECT_COLOR"><B>REDIRECT_COLOR</B></A> - 
 Static variable in class org.apache.jmeter.visualizers.<A HREF="org/apache/jmeter/visualizers/ViewResultsFullVisualizer.html" title="class in org.apache.jmeter.visualizers">ViewResultsFullVisualizer</A>
-<DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/extractor/XPathExtractor.html#REFNAME"><B>REFNAME</B></A> - 
-Static variable in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/XPathExtractor.html" title="class in org.apache.jmeter.extractor">XPathExtractor</A>
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/protocol/http/proxy/ProxyControl.html#REGEX_MATCH"><B>REGEX_MATCH</B></A> - 
 Static variable in class org.apache.jmeter.protocol.http.proxy.<A HREF="org/apache/jmeter/protocol/http/proxy/ProxyControl.html" title="class in org.apache.jmeter.protocol.http.proxy">ProxyControl</A>
@@ -17414,6 +17400,9 @@ Method in class org.apache.jmeter.visualizers.<A HREF="org/apache/jmeter/visuali
 <DT><A HREF="org/apache/jmeter/visualizers/SplineModel.html#setName(java.lang.String)"><B>setName(String)</B></A> - 
 Method in class org.apache.jmeter.visualizers.<A HREF="org/apache/jmeter/visualizers/SplineModel.html" title="class in org.apache.jmeter.visualizers">SplineModel</A>
 <DD>&nbsp;
+<DT><A HREF="org/apache/jmeter/extractor/XPathExtractor.html#setNameSpace(boolean)"><B>setNameSpace(boolean)</B></A> - 
+Method in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/XPathExtractor.html" title="class in org.apache.jmeter.extractor">XPathExtractor</A>
+<DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/modifiers/UserParameters.html#setNames(java.util.Collection)"><B>setNames(Collection)</B></A> - 
 Method in class org.apache.jmeter.modifiers.<A HREF="org/apache/jmeter/modifiers/UserParameters.html" title="class in org.apache.jmeter.modifiers">UserParameters</A>
 <DD>The list of names of the variables to hold values. 
@@ -19439,9 +19428,6 @@ Static variable in class org.apache.jmeter.gui.util.<A HREF="org/apache/jmeter/g
 <DT><A HREF="org/apache/jmeter/gui/util/ReportMenuFactory.html#TIMERS"><B>TIMERS</B></A> - 
 Static variable in class org.apache.jmeter.gui.util.<A HREF="org/apache/jmeter/gui/util/ReportMenuFactory.html" title="class in org.apache.jmeter.gui.util">ReportMenuFactory</A>
 <DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/extractor/XPathExtractor.html#TOLERANT"><B>TOLERANT</B></A> - 
-Static variable in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/XPathExtractor.html" title="class in org.apache.jmeter.extractor">XPathExtractor</A>
-<DD>&nbsp;
 <DT><A HREF="org/apache/jorphan/gui/layout/VerticalLayout.html#TOP"><B>TOP</B></A> - 
 Static variable in class org.apache.jorphan.gui.layout.<A HREF="org/apache/jorphan/gui/layout/VerticalLayout.html" title="class in org.apache.jorphan.gui.layout">VerticalLayout</A>
 <DD>The anchoring constant that designates anchoring to the top of the
@@ -20658,6 +20644,9 @@ Variable in class org.apache.jmeter.protocol.http.util.accesslog.<A HREF="org/ap
 <DT><A HREF="org/apache/jmeter/extractor/RegexExtractor.html#useHeaders()"><B>useHeaders()</B></A> - 
 Method in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/RegexExtractor.html" title="class in org.apache.jmeter.extractor">RegexExtractor</A>
 <DD>&nbsp;
+<DT><A HREF="org/apache/jmeter/extractor/XPathExtractor.html#useNameSpace()"><B>useNameSpace()</B></A> - 
+Method in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/XPathExtractor.html" title="class in org.apache.jmeter.extractor">XPathExtractor</A>
+<DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/extractor/RegexExtractor.html#useUrl()"><B>useUrl()</B></A> - 
 Method in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/RegexExtractor.html" title="class in org.apache.jmeter.extractor">RegexExtractor</A>
 <DD>&nbsp;
@@ -20984,9 +20973,6 @@ Static variable in class org.apache.jmeter.protocol.http.sampler.<A HREF="org/ap
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/protocol/http/sampler/WebServiceSampler.html#XML_PATH_LOC"><B>XML_PATH_LOC</B></A> - 
 Static variable in class org.apache.jmeter.protocol.http.sampler.<A HREF="org/apache/jmeter/protocol/http/sampler/WebServiceSampler.html" title="class in org.apache.jmeter.protocol.http.sampler">WebServiceSampler</A>
-<DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/extractor/XPathExtractor.html#XPATH_QUERY"><B>XPATH_QUERY</B></A> - 
-Static variable in class org.apache.jmeter.extractor.<A HREF="org/apache/jmeter/extractor/XPathExtractor.html" title="class in org.apache.jmeter.extractor">XPathExtractor</A>
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/functions/XPath.html" title="class in org.apache.jmeter.functions"><B>XPath</B></A> - class org.apache.jmeter.functions.<A HREF="org/apache/jmeter/functions/XPath.html" title="class in org.apache.jmeter.functions">XPath</A>.<DD>The function represented by this class allows data to be read from XML files.
  <DT><A HREF="org/apache/jmeter/functions/XPath.html#XPath()"><B>XPath()</B></A> - 

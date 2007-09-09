@@ -728,7 +728,7 @@ resource requires query string parameters, add them below in the
         
 												<b	>
 								In versions of JMeter after 2.2: if both the 'name' atribute and MIME type (below) are omitted, then the file is sent as the body
-        of the POST request. This allows arbitraty POST bodies to be sent.
+        of the POST request. This allows arbitrary POST bodies to be sent.
 						</b>
 									
         
@@ -942,6 +942,26 @@ JMeter 2.1.2 introduces the a new property
 									
 		    
 												<li	>
+								Commit
+						</li>
+									
+		    
+												<li	>
+								Rollback
+						</li>
+									
+		    
+												<li	>
+								Autocommit(false)
+						</li>
+									
+		    
+												<li	>
+								Autocommit(true)
+						</li>
+									
+		    
+												<li	>
 								Edit - this should be a variable reference that evaluates to one of the above
 						</li>
 									
@@ -956,7 +976,46 @@ JMeter 2.1.2 introduces the a new property
 		</tr>
 			<tr>
 			<td>SQL Query</td>
-			<td>						SQL query (for example, "select * from t_customers").
+			<td>						
+        SQL query.
+        Do not enter a trailing semi-colon.
+        There is no need to use { and } to enclose Callable statements.
+        For example:
+        
+												<ul	>
+								
+        
+												<li	>
+								select * from t_customers where id=23
+						</li>
+									
+        
+												<li	>
+								CALL SYSCS_UTIL.SYSCS_EXPORT_TABLE (null,?, ?, null, null, null)
+        
+												<ul	>
+								
+        
+												<li	>
+								Parameter values: tablename,filename
+						</li>
+									
+        
+												<li	>
+								Parameter types:  VARCHAR,VARCHAR
+						</li>
+									
+        
+						</ul>
+									
+        
+						</li>
+									
+        The second example assumes you are using Apache Derby.
+        
+						</ul>
+									
+        
 			</td>
 			<td>
 											Yes
@@ -975,7 +1034,7 @@ JMeter 2.1.2 introduces the a new property
         
 			</td>
 			<td>
-											Yes, if a prepared statement has parameters
+											Yes, if a prepared or callable statement has parameters
 								</td>
 		</tr>
 			<tr>
@@ -990,15 +1049,14 @@ JMeter 2.1.2 introduces the a new property
         
 			</td>
 			<td>
-											Yes, if a prepared statement has parameters
+											Yes, if a prepared or callable statement has parameters
 								</td>
 		</tr>
 		</table>
 	</p>
 							  									 			 	<p><b>See Also:</b>
 	<ul>
-						<li><a href="test_plan.html#assertions">Assertion</a></li>
-								<li><a href="build-db-test-plan.html">Building a Database Test Plan</a></li>
+						<li><a href="build-db-test-plan.html">Building a Database Test Plan</a></li>
 								<li>	<a href="../usermanual/component_reference.html#JDBC_Connection_Configuration">JDBC Connection Configuration</a>
 </li>
 				</ul>
@@ -6250,11 +6308,14 @@ the Report.
 	
 												<p><table border="1" bgcolor="#bbbb00" width="50%" cellspacing="0" cellpadding="2">
 		<tr><td>						CSV Dataset variables are defined after configuration processing is completed,
-	so they cannot be used for other configuration items such as JDBC Config (see 
+	so they cannot be used for some configuration items - such as JDBC Config - 
+	that process their contents at configuration time (see 
 												<a	 href="http://issues.apache.org/bugzilla/show_bug.cgi?id=40934">
 								Bug 40394 
 						</a>
 									)
+	However the variables do work in the HTTP Auth Manager, as the username etc are processed at run-time.
+	
 			</td></tr>
 	</table></p>
 									
@@ -6391,7 +6452,7 @@ there is currently no way to sepcify which one is to be used.
 
 												<p	>
 								The Authorization Manager lets you specify one or more user logins for web pages that are
-restricted using Basic HTTP Authentication.  You see this type of authentication when you use
+restricted using server authentication.  You see this type of authentication when you use
 your browser to access a restricted page, and your browser displays a login dialog box.  JMeter
 transmits the login information when it encounters this type of page.
 						</p>
@@ -6419,10 +6480,14 @@ Note: the above settings only apply to the HttpClient sampler (and the SOAP samp
 									
 
 												<p><table border="1" bgcolor="#bbbb00" width="50%" cellspacing="0" cellpadding="2">
-		<tr><td>						In the current release, all JMeter threads in a Thread Group use the same username/password
-for a given Base URL even if you create multiple users with the same Base URL in the authorization table.
-We plan to correct this in a future release.  As a workwaround, you can create multiple Thread Groups for your
-Test Plan, with each Thread Group having its own Authorization Manager.
+		<tr><td>						
+When looking for a match against a URL, JMeter checks each entry in turn, and stops when it finds the first match.
+Thus the most specific URLs should appear first in the list, followed by less specific ones.
+Duplicate URLs will be ignored.
+If you want to use different usernames/passwords for different threads, you can use variables.
+These can be set up using a 
+												<a href="../usermanual/component_reference.html#CSV_Data_Set_Config">CSV Data Set Config</a>
+									 Element (for example).
 
 			</td></tr>
 	</table></p>
@@ -6527,7 +6592,7 @@ authorization table entries.
 						</ul>
 							  									 				<p><table border="1" bgcolor="#bbbb00" width="50%" cellspacing="0" cellpadding="2">
 		<tr><td>						When you save the Test Plan, JMeter automatically saves all of the authorization
-table entries.
+table entries - including any passwords, which are not encrypted.
 			</td></tr>
 	</table></p>
 							  									 				<a name="authorization_example"/>
@@ -6621,6 +6686,16 @@ the cookie will be shared by all JMeter threads.
 						</p>
 									
 
+												<p	>
+								
+Since version 2.0.3, cookies with null values are ignored by default.
+This can be changed by setting the JMeter property: CookieManager.delete_null_cookies=false.
+Note that this also applies to manually defined cookies - any such cookies will be removed from the display when it is updated.
+Note also that the cookie name must be unique - if a second cookie is defined with the same name, it will replace the first.
+
+						</p>
+									
+
 														<p><b>Control Panel</b></p>
 						<div align="center"><img width='548' height='319' src="../images/screenshots/http-config/http-cookie-manager.png"></div>
 											  									 			 <p>
@@ -6648,8 +6723,8 @@ the cookie will be shared by all JMeter threads.
 			<td>Cookie Policy</td>
 			<td>						The cookie policy that will be used to manage the cookies. 
   "compatibility" is the default, and should work in most cases.
-  See http://jakarta.apache.org/commons/httpclient/cookies.html and 
-  http://jakarta.apache.org/commons/httpclient/apidocs/org/apache/commons/httpclient/cookie/CookiePolicy.html
+  See http://jakarta.apache.org/httpcomponents/httpclient-3.x/cookies.html and 
+  http://jakarta.apache.org/httpcomponents/httpclient-3.x/apidocs/org/apache/commons/httpclient/cookie/CookiePolicy.html
   [Note: "ignoreCookies" is equivalent to omitting the CookieManager.]
     
 			</td>
@@ -6661,6 +6736,12 @@ the cookie will be shared by all JMeter threads.
 			<td>Cookies Stored in the Cookie Manager</td>
 			<td>						This
   gives you the opportunity to use hardcoded cookies that will be used by all threads during the test execution.
+  
+												<br	>
+						</br>
+									
+  The "domain" is the hostname of the server (without http://); the port is currently ignored.
+  
 			</td>
 			<td>
 											No (discouraged, unless you know what you're doing)
@@ -9154,6 +9235,7 @@ See the file BeanShellListeners.bshrc for example definitions.
 								log - (Logger) - can be used to write to the log file
 						</li>
 									
+
 
 												<li	>
 								ctx - (JMeterContext) - gives access to the context
