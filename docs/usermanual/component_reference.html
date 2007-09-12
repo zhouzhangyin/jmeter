@@ -555,6 +555,21 @@ https.sessioncontext.shared=true
 									
         
 												<p	>
+								
+        JMeter defaults to the SSL protocol level TLS.
+        If the server needs a different level, e.g. SSLv3, change the JMeter property, for example:
+
+												<pre	>
+								
+https.default.protocol=SSLv3
+
+						</pre>
+									 
+        
+						</p>
+									
+        
+												<p	>
 								If the request uses cookies, then you will also need an
         
 												<a href="../usermanual/component_reference.html#HTTP_Cookie_Manager">HTTP Cookie Manager</a>
@@ -4921,12 +4936,47 @@ which clearly won't match. Thus the For 2 Sampler will not be run.
 		  															
 
 												<p	>
-								The Module Controller provides a mechanism for substituting test plan fragments into the current test plan at run-time.  To use this
-module effectively, one might have a number of Controllers under the 
+								
+The Module Controller provides a mechanism for substituting test plan fragments into the current test plan at run-time.
+
+						</p>
+									
+
+												<p	>
+								
+A test plan fragment consists of a Controller and all the test elements (samplers etc) contained in it. 
+The fragment can be located in any Thread Group, or on the 
 												<a href="../usermanual/component_reference.html#WorkBench">WorkBench</a>
-									, each with a different series of
+									.
+If the fragment is located in a Thread Group, then its Controller can be disabled to prevent the fragment being run
+except by the Module Controller. 
+Or you can store the fragments in a dummy Thread Group, and disable the entire Thread Group. 
+
+						</p>
+									
+
+												<p	>
+								
+There can be multiple fragments, each with a different series of
 samplers under them.  The module controller can then be used to easily switch between these multiple test cases simply by choosing
 the appropriate controller in its drop down box.  This provides convenience for running many alternate test plans quickly and easily.
+
+						</p>
+									
+
+												<p	>
+								
+A fragment name is made up of the Controller name and all its parent names.
+For example:
+
+												<pre	>
+								
+Test Plan / Protocol: JDBC / Control / Interleave Controller
+
+						</pre>
+									
+Any fragments used by the Module Controller must have a unique name,
+as the name is used to find the target controller when a test plan is reloaded.
 
 						</p>
 									
@@ -9235,7 +9285,6 @@ See the file BeanShellListeners.bshrc for example definitions.
 								log - (Logger) - can be used to write to the log file
 						</li>
 									
-
 
 												<li	>
 								ctx - (JMeterContext) - gives access to the context
