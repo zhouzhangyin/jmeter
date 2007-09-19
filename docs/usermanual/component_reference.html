@@ -4493,6 +4493,16 @@ setting is reset when a parent Loop Controller restarts.
 								The If Controller allows the user to control whether the test elements below it (its children) are run or not.
 						</p>
 									
+		
+												<p	>
+								
+		Prior to JMeter 2.3RC3, the condition was evaluated for every runnable element contained in the controller.
+		This sometimes caused unexpected behaviour, so 2.3RC3 was changed to evaluate the condition only once on initial entry.
+		However, the original behaviour is also useful, so versions of JMeter after 2.3RC4 have an additional
+		option to select the original behaviour.
+		
+						</p>
+									
 	
 														<p><b>Control Panel</b></p>
 						<div align="center"><img width='358' height='131' src="../images/screenshots/ifcontroller.png"></div>
@@ -4519,6 +4529,17 @@ setting is reset when a parent Loop Controller restarts.
 											Yes
 								</td>
 		</tr>
+			<tr>
+			<td>Evaluate for all children</td>
+			<td>						
+	Should condition be evaluated for all children?
+	If not checked, then the condition is only evaluated on entry.
+	
+			</td>
+			<td>
+											Yes
+								</td>
+		</tr>
 		</table>
 	</p>
 							  									 				<p	>
@@ -4538,7 +4559,7 @@ setting is reset when a parent Loop Controller restarts.
 									
 			
 												<li	>
-								"${JMeterThread.last_sample_ok}" == "true" (check if last sample succeeded)
+								${JMeterThread.last_sample_ok} (check if last sample succeeded)
 						</li>
 									
 		
