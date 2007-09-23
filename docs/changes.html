@@ -172,6 +172,16 @@
 						</li>
 									
 
+												<li	>
+								Bug 43449 - Statistical Remote mode does not handle Latency
+						</li>
+									
+
+												<li	>
+								Bug 43450 (partial fix) - Allow SampleCount and ErrorCount to be saved to/restored from files
+						</li>
+									
+
 						</ul>
 							  									 				<h4	>
 								Improvements
@@ -196,6 +206,11 @@
 
 												<li	>
 								Ensure uncaught exceptions are logged
+						</li>
+									
+
+												<li	>
+								Look for user.properties and system.properties in JMeter bin directory if not found locally
 						</li>
 									
 
@@ -556,7 +571,7 @@ This means that any tests using the Single-bind test will need to be updated to 
 						</p>
 							  									 				<p	>
 								
-Bug 41104: JMeterThread behaviour was changed so that PostProcessors are run in forward order
+Bug 41140: JMeterThread behaviour was changed so that PostProcessors are run in forward order
 (as they appear in the test plan) rather than reverse order as previously.
 The original behaviour can be restored by setting the following JMeter property:
 
@@ -1085,6 +1100,11 @@ It was unused so far, and used the only Sun-specific class in JMeter.
 
 												<li	>
 								Fix ClassCast Exception when using sampler that returns null, e..g TestAction
+						</li>
+									
+
+												<li	>
+								Bug 41140 - Post-processors are run in reverse order
 						</li>
 									
 
