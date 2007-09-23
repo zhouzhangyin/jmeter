@@ -292,6 +292,14 @@ This is a nice packaging for the various information returned from taking a
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;int</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html#getErrorCount()">getErrorCount</A></B>()</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the count of errors.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>&nbsp;long</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html#getIdleTime()">getIdleTime</A></B>()</CODE>
 
@@ -615,6 +623,14 @@ This is a nice packaging for the various information returned from taking a
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
 <CODE>protected &nbsp;void</CODE></FONT></TD>
 <TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html#setEndTime(long)">setEndTime</A></B>(long&nbsp;end)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html#setErrorCount(int)">setErrorCount</A></B>(int&nbsp;i)</CODE>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
@@ -2001,7 +2017,38 @@ public int <B>getSampleCount</B>()</PRE>
 </DD>
 <DD><DL>
 
-<DT><B>Returns:</B><DD></DL>
+<DT><B>Returns:</B><DD>the count of samples</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="getErrorCount()"><!-- --></A><H3>
+getErrorCount</H3>
+<PRE>
+public int <B>getErrorCount</B>()</PRE>
+<DL>
+<DD>Returns the count of errors.
+<P>
+<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+
+<DT><B>Returns:</B><DD>0 - or 1 if the sample failed</DL>
+</DD>
+</DL>
+<HR>
+
+<A NAME="setErrorCount(int)"><!-- --></A><H3>
+setErrorCount</H3>
+<PRE>
+public void <B>setErrorCount</B>(int&nbsp;i)</PRE>
+<DL>
+<DD><DL>
+</DL>
+</DD>
+<DD><DL>
+</DL>
 </DD>
 </DL>
 <HR>
@@ -2036,7 +2083,7 @@ public int <B>getBytes</B>()</PRE>
 </DD>
 <DD><DL>
 
-<DT><B>Returns:</B><DD></DL>
+<DT><B>Returns:</B><DD>number of bytes in response</DL>
 </DD>
 </DL>
 <HR>

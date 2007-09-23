@@ -97,10 +97,13 @@ Class StatisticalSampleResult</H2>
 <DT>public class <B>StatisticalSampleResult</B><DT>extends <A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A><DT>implements <A HREF="http://java.sun.com/j2se/1.4.2/docs/api/java/io/Serializable.html" title="class or interface in java.io">Serializable</A></DL>
 
 <P>
+Aggregates sample results for use by the Statistical remote batch mode.
+ Samples are aggregated by the key defined by getKey().
+ TODO: merge error count into parent class?
+<P>
+
+<P>
 <DL>
-<DT><B>Author:</B></DT>
-  <DD>Lars Krog-Jensen
-         Created: 2005-okt-04</DD>
 <DT><B>See Also:</B><DD><A HREF="../../../../serialized-form.html#org.apache.jmeter.samplers.StatisticalSampleResult">Serialized Form</A></DL>
 <HR>
 
@@ -142,6 +145,13 @@ Class StatisticalSampleResult</H2>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
+<TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/StatisticalSampleResult.html#StatisticalSampleResult(long, long)">StatisticalSampleResult</A></B>(long&nbsp;stamp,
+                        long&nbsp;elapsed)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<B>Deprecated.</B>&nbsp;<I>Needs to be replaced when multiple sample results are sorted out</I></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
 <TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/StatisticalSampleResult.html#StatisticalSampleResult(org.apache.jmeter.samplers.SampleResult)">StatisticalSampleResult</A></B>(<A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A>&nbsp;res)</CODE>
 
 <BR>
@@ -171,7 +181,7 @@ Class StatisticalSampleResult</H2>
 <TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/StatisticalSampleResult.html#getErrorCount()">getErrorCount</A></B>()</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Returns the count of errors.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -179,7 +189,10 @@ Class StatisticalSampleResult</H2>
 <TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/StatisticalSampleResult.html#getKey(org.apache.jmeter.samplers.SampleEvent)">getKey</A></B>(<A HREF="../../../../org/apache/jmeter/samplers/SampleEvent.html" title="class in org.apache.jmeter.samplers">SampleEvent</A>&nbsp;event)</CODE>
 
 <BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generates the key to be used for aggregating samples as follows:<br/>
+ <code>sampleLabel</code> "-" <code>threadGroup</code>
+ 
+ N.B. the key should agree with the fixed items that are saved in the sample.</TD>
 </TR>
 <TR BGCOLOR="white" CLASS="TableRowColor">
 <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
@@ -196,6 +209,14 @@ Class StatisticalSampleResult</H2>
 
 <BR>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Get the sample timestamp, which may be either the start time or the end time.</TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+<TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+<CODE>&nbsp;void</CODE></FONT></TD>
+<TD><CODE><B><A HREF="../../../../org/apache/jmeter/samplers/StatisticalSampleResult.html#setErrorCount(int)">setErrorCount</A></B>(int&nbsp;e)</CODE>
+
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
 </TR>
 </TABLE>
 &nbsp;<A NAME="methods_inherited_from_class_org.apache.jmeter.samplers.SampleResult"><!-- --></A>
@@ -238,6 +259,19 @@ StatisticalSampleResult</H3>
 public <B>StatisticalSampleResult</B>()</PRE>
 <DL>
 </DL>
+<HR>
+
+<A NAME="StatisticalSampleResult(long, long)"><!-- --></A><H3>
+StatisticalSampleResult</H3>
+<PRE>
+public <B>StatisticalSampleResult</B>(long&nbsp;stamp,
+                               long&nbsp;elapsed)</PRE>
+<DL>
+<DD><B>Deprecated.</B>&nbsp;<I>Needs to be replaced when multiple sample results are sorted out</I>
+<P>
+<DD>Allow OldSaveService to generate a suitable result when sample/error counts have been saved.
+<P>
+<DT><B>Parameters:</B><DD><CODE>stamp</CODE> - <DD><CODE>elapsed</CODE> - </DL>
 <HR>
 
 <A NAME="StatisticalSampleResult(org.apache.jmeter.samplers.SampleResult)"><!-- --></A><H3>
@@ -313,8 +347,26 @@ getErrorCount</H3>
 <PRE>
 public int <B>getErrorCount</B>()</PRE>
 <DL>
+<DD><B>Description copied from class: <CODE><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A></CODE></B></DD>
+<DD>Returns the count of errors.
+<P>
 <DD><DL>
+<DT><B>Overrides:</B><DD><CODE><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html#getErrorCount()">getErrorCount</A></CODE> in class <CODE><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A></CODE></DL>
+</DD>
+<DD><DL>
+
+<DT><B>Returns:</B><DD>0 - or 1 if the sample failed</DL>
+</DD>
 </DL>
+<HR>
+
+<A NAME="setErrorCount(int)"><!-- --></A><H3>
+setErrorCount</H3>
+<PRE>
+public void <B>setErrorCount</B>(int&nbsp;e)</PRE>
+<DL>
+<DD><DL>
+<DT><B>Overrides:</B><DD><CODE><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html#setErrorCount(int)">setErrorCount</A></CODE> in class <CODE><A HREF="../../../../org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A></CODE></DL>
 </DD>
 <DD><DL>
 </DL>
@@ -327,11 +379,17 @@ getKey</H3>
 <PRE>
 public static <A HREF="http://java.sun.com/j2se/1.4.2/docs/api/java/lang/String.html" title="class or interface in java.lang">String</A> <B>getKey</B>(<A HREF="../../../../org/apache/jmeter/samplers/SampleEvent.html" title="class in org.apache.jmeter.samplers">SampleEvent</A>&nbsp;event)</PRE>
 <DL>
+<DD>Generates the key to be used for aggregating samples as follows:<br/>
+ <code>sampleLabel</code> "-" <code>threadGroup</code>
+ 
+ N.B. the key should agree with the fixed items that are saved in the sample.
+<P>
 <DD><DL>
 </DL>
 </DD>
 <DD><DL>
-</DL>
+<DT><B>Parameters:</B><DD><CODE>event</CODE> - sample event whose key is to be calculated
+<DT><B>Returns:</B><DD>the key to use for aggregating samples</DL>
 </DD>
 </DL>
 <!-- ========= END OF CLASS DATA ========= -->

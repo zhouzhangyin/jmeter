@@ -6632,6 +6632,9 @@ Method in interface org.apache.jmeter.monitor.model.<A HREF="org/apache/jmeter/m
 <DT><A HREF="org/apache/jmeter/monitor/model/RequestInfoImpl.html#getErrorCount()"><B>getErrorCount()</B></A> - 
 Method in class org.apache.jmeter.monitor.model.<A HREF="org/apache/jmeter/monitor/model/RequestInfoImpl.html" title="class in org.apache.jmeter.monitor.model">RequestInfoImpl</A>
 <DD>&nbsp;
+<DT><A HREF="org/apache/jmeter/samplers/SampleResult.html#getErrorCount()"><B>getErrorCount()</B></A> - 
+Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A>
+<DD>Returns the count of errors.
 <DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html#getErrorCount()"><B>getErrorCount()</B></A> - 
 Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>
 <DD>&nbsp;
@@ -7230,7 +7233,10 @@ Method in class org.apache.jmeter.util.<A HREF="org/apache/jmeter/util/SlowSSLSo
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html#getKey(org.apache.jmeter.samplers.SampleEvent)"><B>getKey(SampleEvent)</B></A> - 
 Static method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>
-<DD>&nbsp;
+<DD>Generates the key to be used for aggregating samples as follows:<br/>
+ <code>sampleLabel</code> "-" <code>threadGroup</code>
+ 
+ N.B. the key should agree with the fixed items that are saved in the sample.
 <DT><A HREF="org/apache/jmeter/util/SSLManager.html#getKeyStore()"><B>getKeyStore()</B></A> - 
 Method in class org.apache.jmeter.util.<A HREF="org/apache/jmeter/util/SSLManager.html" title="class in org.apache.jmeter.util">SSLManager</A>
 <DD>Opens and initializes the KeyStore. 
@@ -15521,9 +15527,13 @@ Constructor for class org.apache.jmeter.visualizers.<A HREF="org/apache/jmeter/v
 <DT><A HREF="org/apache/jmeter/visualizers/StatVisualizer.html" title="class in org.apache.jmeter.visualizers"><B>StatVisualizer</B></A> - class org.apache.jmeter.visualizers.<A HREF="org/apache/jmeter/visualizers/StatVisualizer.html" title="class in org.apache.jmeter.visualizers">StatVisualizer</A>.<DD>Aggregrate Table-Based Reporting Visualizer for JMeter. <DT><A HREF="org/apache/jmeter/visualizers/StatVisualizer.html#StatVisualizer()"><B>StatVisualizer()</B></A> - 
 Constructor for class org.apache.jmeter.visualizers.<A HREF="org/apache/jmeter/visualizers/StatVisualizer.html" title="class in org.apache.jmeter.visualizers">StatVisualizer</A>
 <DD>&nbsp;
-<DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers"><B>StatisticalSampleResult</B></A> - class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>.<DD>&nbsp;<DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html#StatisticalSampleResult()"><B>StatisticalSampleResult()</B></A> - 
+<DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers"><B>StatisticalSampleResult</B></A> - class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>.<DD>Aggregates sample results for use by the Statistical remote batch mode.
+ <DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html#StatisticalSampleResult()"><B>StatisticalSampleResult()</B></A> - 
 Constructor for class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>
 <DD>&nbsp;
+<DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html#StatisticalSampleResult(long, long)"><B>StatisticalSampleResult(long, long)</B></A> - 
+Constructor for class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>
+<DD><B>Deprecated.</B>&nbsp;<I>Needs to be replaced when multiple sample results are sorted out</I>
 <DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html#StatisticalSampleResult(org.apache.jmeter.samplers.SampleResult)"><B>StatisticalSampleResult(SampleResult)</B></A> - 
 Constructor for class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>
 <DD>&nbsp;
@@ -15931,6 +15941,9 @@ Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/S
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/save/converters/SampleResultConverter.html#saveResponseHeaders(com.thoughtworks.xstream.io.HierarchicalStreamWriter, com.thoughtworks.xstream.converters.MarshallingContext, org.apache.jmeter.samplers.SampleResult, org.apache.jmeter.samplers.SampleSaveConfiguration)"><B>saveResponseHeaders(HierarchicalStreamWriter, MarshallingContext, SampleResult, SampleSaveConfiguration)</B></A> - 
 Method in class org.apache.jmeter.save.converters.<A HREF="org/apache/jmeter/save/converters/SampleResultConverter.html" title="class in org.apache.jmeter.save.converters">SampleResultConverter</A>
+<DD>&nbsp;
+<DT><A HREF="org/apache/jmeter/samplers/SampleSaveConfiguration.html#saveSampleCount()"><B>saveSampleCount()</B></A> - 
+Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/SampleSaveConfiguration.html" title="class in org.apache.jmeter.samplers">SampleSaveConfiguration</A>
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/save/SaveService.html#saveSampleResult(org.apache.jmeter.samplers.SampleResult, java.io.OutputStream)"><B>saveSampleResult(SampleResult, OutputStream)</B></A> - 
 Static method in class org.apache.jmeter.save.<A HREF="org/apache/jmeter/save/SaveService.html" title="class in org.apache.jmeter.save">SaveService</A>
@@ -16742,6 +16755,12 @@ Method in interface org.apache.jmeter.monitor.model.<A HREF="org/apache/jmeter/m
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/monitor/model/RequestInfoImpl.html#setErrorCount(long)"><B>setErrorCount(long)</B></A> - 
 Method in class org.apache.jmeter.monitor.model.<A HREF="org/apache/jmeter/monitor/model/RequestInfoImpl.html" title="class in org.apache.jmeter.monitor.model">RequestInfoImpl</A>
+<DD>&nbsp;
+<DT><A HREF="org/apache/jmeter/samplers/SampleResult.html#setErrorCount(int)"><B>setErrorCount(int)</B></A> - 
+Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A>
+<DD>&nbsp;
+<DT><A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html#setErrorCount(int)"><B>setErrorCount(int)</B></A> - 
+Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/StatisticalSampleResult.html" title="class in org.apache.jmeter.samplers">StatisticalSampleResult</A>
 <DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/reporters/ResultCollector.html#setErrorLogging(boolean)"><B>setErrorLogging(boolean)</B></A> - 
 Method in class org.apache.jmeter.reporters.<A HREF="org/apache/jmeter/reporters/ResultCollector.html" title="class in org.apache.jmeter.reporters">ResultCollector</A>
@@ -18101,6 +18120,9 @@ Method in class org.apache.jmeter.protocol.http.control.<A HREF="org/apache/jmet
 Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A>
 <DD>For the JMS sampler, it can perform multiple samples for greater degree
  of accuracy.
+<DT><A HREF="org/apache/jmeter/samplers/SampleSaveConfiguration.html#setSampleCount(boolean)"><B>setSampleCount(boolean)</B></A> - 
+Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/SampleSaveConfiguration.html" title="class in org.apache.jmeter.samplers">SampleSaveConfiguration</A>
+<DD>&nbsp;
 <DT><A HREF="org/apache/jmeter/samplers/SampleResult.html#setSampleLabel(java.lang.String)"><B>setSampleLabel(String)</B></A> - 
 Method in class org.apache.jmeter.samplers.<A HREF="org/apache/jmeter/samplers/SampleResult.html" title="class in org.apache.jmeter.samplers">SampleResult</A>
 <DD>&nbsp;
