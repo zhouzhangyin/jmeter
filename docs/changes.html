@@ -182,7 +182,7 @@ Core Improvements:
 </u>
 </h3>
 <h4>
-• A new Extractor that uses CSS or jquery-like selector syntax has been introduced, 
+* A new Extractor that uses CSS or jquery-like selector syntax has been introduced, 
 it allows using either JODD or JSOUP implementations
 </h4>
 <p>
@@ -202,7 +202,7 @@ Result: the title of the page in a JMeter variable
 
 </p>
 <h4>
-• JMeter can now handle different types of documents (PDF, MsOffice files, Apache OpenOffice's files...)
+* JMeter can now handle different types of documents (PDF, MsOffice files, Apache OpenOffice's files...)
  within different elements 
 </h4>
 <ul>
@@ -233,7 +233,7 @@ View Results Tree, view as a text the documents
 
 </p>
 <h4>
-• A new Regex User Parameters Pre-Processor that enables injecting input parameter names and values 
+* A new Regex User Parameters Pre-Processor that enables injecting input parameter names and values 
 using a reference extracted by Regular Expression Extractor from a previous response
 </h4>
 <p>
@@ -245,7 +245,7 @@ using a reference extracted by Regular Expression Extractor from a previous resp
 
 </p>
 <h4>
-• TCP Sampler: new options
+* TCP Sampler: new options
 </h4>
 <p>
 TCP Sampler has been enhanced with new options to allow setting 
@@ -269,14 +269,14 @@ End of line(EOL) byte value
 
 </p>
 <h4>
-• A new function 
+* A new function 
 <i>
 __escapeOroRegexpChars(,)
 </i>
  has been introduced quote ORO regexp meta characters
 </h4>
 <h4>
-• ForEach Controller: new fields
+* ForEach Controller: new fields
 </h4>
 <p>
 ForEach Controller has now 2 new fields to control start and end of loop
@@ -287,7 +287,7 @@ ForEach Controller has now 2 new fields to control start and end of loop
 
 </p>
 <h4>
-• Result Status Action Handler now has a new option to "Start next thread loop"
+* Result Status Action Handler now has a new option to "Start next thread loop"
 </h4>
 <p>
 
@@ -298,7 +298,7 @@ ForEach Controller has now 2 new fields to control start and end of loop
 
 </p>
 <h4>
-• JMS Publisher: new option
+* JMS Publisher: new option
 </h4>
 <p>
 JMS Publisher can now send Bytes Messages
@@ -306,7 +306,7 @@ JMS Publisher can now send Bytes Messages
 <p><table border="0" cellspacing="0" cellpadding="0"><tr><td><img width='833' height='701' src="./images/screenshots/changes/2.9/11_jms_publisher_bytes.png"><br>
 <font size="-1"></font></td></tr></table></p>
 <h4>
-• Memory and performance improvements
+* Memory and performance improvements
 </h4>
 <p>
 Significant improvements have been done in this version on memory usage per Thread and CPU when more 
@@ -344,7 +344,7 @@ Result data are now saved to CSV by default (jmeter.save.saveservice.output_form
 
 </p>
 <h4>
-• XPath Assertion now enables using a JMeter variable as input
+* XPath Assertion now enables using a JMeter variable as input
 </h4>
 <p>
 
@@ -360,10 +360,10 @@ GUI and ergonomy Improvements:
 </u>
 </h3>
 <h4>
-• Search feature has been improved to search within more internal fields of elements and expand search results
+* Search feature has been improved to search within more internal fields of elements and expand search results
 </h4>
 <h4>
-• Copy/paste is now possible between 2 JMeter instances >= 2.9 version
+* Copy/paste is now possible between 2 JMeter instances >= 2.9 version
 </h4>
 <p>
 Copy element(s) from one JMeter instance:
@@ -382,7 +382,7 @@ Paste element(s) into a second JMeter instance:
 
 </p>
 <h4>
-• HTTP Header Manager
+* HTTP Header Manager
 </h4>
 <p>
 Allow copy from clipboard to HeaderPanel, headers are supposed to be separated by new line
@@ -398,7 +398,7 @@ name:value
 
 </p>
 <h4>
-• Module Controller
+* Module Controller
 </h4>
 <p>
 Module Controller has been improved to better render referenced controller and expand it by clicking on a new button
@@ -409,7 +409,7 @@ Module Controller has been improved to better render referenced controller and e
 
 </p>
 <h4>
-• HTTP Proxy Server
+* HTTP Proxy Server
 </h4>
 <p>
 HTTP Proxy Server now has a button to add a set of default exclusions for URL patterns, 
@@ -425,7 +425,7 @@ proxy.excludes.suggested
 
 </p>
 <h4>
-• Rendering of target controller has been improved in HTTP Proxy Server
+* Rendering of target controller has been improved in HTTP Proxy Server
 </h4>
 <h3>
 <u>
@@ -433,11 +433,11 @@ HTTP Proxy Server recording:
 </u>
 </h3>
 <p>
-• HTTP Proxy Server now automatically uses HTTP Request with Raw Post Body mode for 
+* HTTP Proxy Server now automatically uses HTTP Request with Raw Post Body mode for 
 samples that only have one unnamed argument (JSON, XML, GWT...)
 </p>
 <p>
-• HTTP Proxy Server does not force user to select the type of Sampler in HTTP Sampler Settings,
+* HTTP Proxy Server does not force user to select the type of Sampler in HTTP Sampler Settings,
  this allows easier switch between implementations as Sampler do not have this information set anymore
 </p>
 <p>
@@ -449,10 +449,10 @@ samples that only have one unnamed argument (JSON, XML, GWT...)
 
 </p>
 <p>
-• SamplerCreator interface has been enriched to meet new requirements for plug-in providers
+* SamplerCreator interface has been enriched to meet new requirements for plug-in providers
 </p>
 <p>
-• It is now possible to create binary sampler for x-www-form-urlencoded POST request by 
+* It is now possible to create binary sampler for x-www-form-urlencoded POST request by 
 modifying 
 <i>
 proxy.binary.types
@@ -460,7 +460,7 @@ proxy.binary.types
  property to add application/x-www-form-urlencoded 
 </p>
 <p>
-• Improved timestamp format auto-detection when reading CSV files
+* Improved timestamp format auto-detection when reading CSV files
 </p>
 <h2>
 Known bugs
