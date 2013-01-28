@@ -233,6 +233,18 @@ View Results Tree, view as a text the documents
 
 </p>
 <h4>
+• A new Regex User Parameters Pre-Processor that enables injecting input parameter names and values 
+using a reference extracted by Regular Expression Extractor from a previous response
+</h4>
+<p>
+
+
+<p><table border="0" cellspacing="0" cellpadding="0"><tr><td><img width='727' height='138' src="./images/screenshots/changes/2.9/13_regex_user_params.png"><br>
+<font size="-1"></font></td></tr></table></p>
+
+
+</p>
+<h4>
 • TCP Sampler: new options
 </h4>
 <p>
@@ -286,16 +298,26 @@ ForEach Controller has now 2 new fields to control start and end of loop
 
 </p>
 <h4>
+• JMS Publisher: new option
+</h4>
+<p>
+JMS Publisher can now send Bytes Messages
+</p>
+<p><table border="0" cellspacing="0" cellpadding="0"><tr><td><img width='833' height='701' src="./images/screenshots/changes/2.9/11_jms_publisher_bytes.png"><br>
+<font size="-1"></font></td></tr></table></p>
+<h4>
 • Memory and performance improvements
 </h4>
 <p>
 Significant improvements have been done in this version on memory usage per Thread and CPU when more 
-than one Post Processor is used Sampler
+than one Post Processor is used as child of a Sampler
 </p>
 <p>
 JSR223 Elements (enable using Groovy, Scala... as scripting languages) have been improved to enable caching 
-of Compilation when scripts are passed Text area
+of Compilation results when scripts are passed in Text area
 </p>
+<p><table border="0" cellspacing="0" cellpadding="0"><tr><td><img width='841' height='470' src="./images/screenshots/changes/2.9/12_jsr223_sampler.png"><br>
+<font size="-1"></font></td></tr></table></p>
 <p>
 Some configuration defaults have changed to improve performances by default(see 
 <a href="https://issues.apache.org/bugzilla/show_bug.cgi?id=54412">Bug 54412</a>
@@ -318,6 +340,17 @@ Result data are now saved to CSV by default (jmeter.save.saveservice.output_form
 
 
 </ul>
+
+
+</p>
+<h4>
+• XPath Assertion now enables using a JMeter variable as input
+</h4>
+<p>
+
+
+<p><table border="0" cellspacing="0" cellpadding="0"><tr><td><img width='800' height='317' src="./images/screenshots/changes/2.9/14_xpath_assertion.png"><br>
+<font size="-1"></font></td></tr></table></p>
 
 
 </p>
@@ -416,7 +449,7 @@ samples that only have one unnamed argument (JSON, XML, GWT...)
 
 </p>
 <p>
-• SamplerCreator interface to meet new requirements for plug-in providers
+• SamplerCreator interface has been enriched to meet new requirements for plug-in providers
 </p>
 <p>
 • It is now possible to create binary sampler for x-www-form-urlencoded POST request by 

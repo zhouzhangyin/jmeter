@@ -4057,11 +4057,19 @@ Use Script files instead of inlining them. This will make JMeter compile them if
 
     
 <li>
-Use Script Text and fill in script cache key property, ensure it is unique accross Test Plan as JMeter will use it to cache result of compilation.
+Or Use Script Text and fill in script cache key property, ensure it is unique accross Test Plan as JMeter will use it to cache result of compilation.
     
 <p>
 <table border="1" bgcolor="#bbbb00" width="50%" cellspacing="0" cellpadding="2">
 <tr><td>When using this feature, ensure you script code does not use JMeter variables directly in script code as caching would only cache first replacement. Instead use script parameters.
+</td></tr>
+</table>
+</p>
+
+    
+<p>
+<table border="1" bgcolor="#bbbb00" width="50%" cellspacing="0" cellpadding="2">
+<tr><td>To benefit fomr Caching and compilation, language engine used for scripting must implement JSR223 Compilable interface (Groovy is one of these, java, beanshell and javascript are not)
 </td></tr>
 </table>
 </p>
@@ -4109,6 +4117,8 @@ Since JMeter 2.8, JSR223 Test Elements using Script file or Script text + cache 
 </p>
 
 
+<p><b>Control Panel</b></p>
+<div align="center"><img width='752' height='507' src="../images/screenshots/jsr223-sampler.png"></div>
 <p>
 <table border="1" bgcolor="#bbbb00" width="50%" cellspacing="0" cellpadding="2">
 <tr><td>
@@ -7714,7 +7724,7 @@ This would be the case if the Regular Expression returned no matches.
 
 
 <p><b>Control Panel</b></p>
-<div align="center"><img width='380' height='152' src="../images/screenshots/logic-controller/foreach-controller.png"></div>
+<div align="center"><img width='342' height='193' src="../images/screenshots/logic-controller/foreach-controller.png"></div>
 <p>
 <b>Parameters</b>
 <a name="ForEach_Controller_parms"/>
