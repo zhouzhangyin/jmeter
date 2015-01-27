@@ -25,10 +25,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.http.Header;
-import org.apache.http.client.params.CookiePolicy;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieOrigin;
 import org.apache.http.cookie.CookieSpec;
-import org.apache.http.cookie.CookieSpecRegistry;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.cookie.MalformedCookieException;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.impl.cookie.BestMatchSpecFactory;
@@ -50,23 +52,26 @@ public class HC4CookieHandler implements CookieHandler {
     
     private final transient CookieSpec cookieSpec;
     
-    private static CookieSpecRegistry registry  = new CookieSpecRegistry();
+    private static final Registry<CookieSpecProvider> registry;
 
     static {
-        registry.register(CookiePolicy.BEST_MATCH, new BestMatchSpecFactory());
-        registry.register(CookiePolicy.BROWSER_COMPATIBILITY, new BrowserCompatSpecFactory());
-        registry.register(CookiePolicy.RFC_2109, new RFC2109SpecFactory());
-        registry.register(CookiePolicy.RFC_2965, new RFC2965SpecFactory());
-        registry.register(CookiePolicy.IGNORE_COOKIES, new IgnoreSpecFactory());
-        registry.register(CookiePolicy.NETSCAPE, new NetscapeDraftSpecFactory());
+        RegistryBuilder<CookieSpecProvider> builder = RegistryBuilder.<CookieSpecProvider>create();
+        builder.register(CookieSpecs.BEST_MATCH, new BestMatchSpecFactory());
+        builder.register(CookieSpecs.BROWSER_COMPATIBILITY, new BrowserCompatSpecFactory());
+        builder.register("CookieSpecs.RFC_2109", new RFC2109SpecFactory());
+        builder.register("CookieSpecs.RFC_2965", new RFC2965SpecFactory());
+        builder.register(CookieSpecs.IGNORE_COOKIES, new IgnoreSpecFactory());
+        builder.register(CookieSpecs.NETSCAPE, new NetscapeDraftSpecFactory());
+        registry = builder.build();
     }
 
     public HC4CookieHandler(String policy) {
         super();
         if (policy.equals(org.apache.commons.httpclient.cookie.CookiePolicy.DEFAULT)) { // tweak diff HC3 vs HC4
-            policy = CookiePolicy.BEST_MATCH;
+            policy = CookieSpecs.BEST_MATCH;
         }
-        this.cookieSpec = registry.getCookieSpec(policy);
+        // TODO not sure why create has a parameter; it does not appear to use it
+        this.cookieSpec = registry.lookup(policy).create(null);
     }
 
     @Override

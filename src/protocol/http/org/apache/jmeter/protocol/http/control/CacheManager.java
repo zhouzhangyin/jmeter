@@ -35,8 +35,7 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.cookie.DateParseException;
-import org.apache.http.impl.cookie.DateUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
 import org.apache.jmeter.protocol.http.sampler.HTTPSampleResult;
@@ -198,12 +197,8 @@ public class CacheManager extends ConfigTestElement implements TestStateListener
                 return;
             }
             if (expires != null) {
-                try {
-                    expiresDate = DateUtils.parseDate(expires);
-                } catch (org.apache.http.impl.cookie.DateParseException e) {
-                    if (log.isDebugEnabled()){
-                        log.debug("Unable to parse Expires: '"+expires+"' "+e);
-                    }
+                expiresDate = DateUtils.parseDate(expires);
+                if (expiresDate == null) {
                     expiresDate = CacheManager.EXPIRED_DATE; // invalid dates must be treated as expired
                 }
             }
@@ -219,14 +214,14 @@ public class CacheManager extends ConfigTestElement implements TestStateListener
 
                 } else if(expires==null) { // No max-age && No expires
                     if(!StringUtils.isEmpty(lastModified) && !StringUtils.isEmpty(date)) {
-                        try {
-                            Date responseDate = DateUtils.parseDate( date );
-                            Date lastModifiedAsDate = DateUtils.parseDate( lastModified );
+                        Date responseDate = DateUtils.parseDate( date );
+                        Date lastModifiedAsDate = DateUtils.parseDate( lastModified );
+                        if (responseDate != null && lastModifiedAsDate != null) {
                             // see https://developer.mozilla.org/en/HTTP_Caching_FAQ
                             // see http://www.ietf.org/rfc/rfc2616.txt#13.2.4 
                             expiresDate=new Date(System.currentTimeMillis()
-                                    +Math.round((responseDate.getTime()-lastModifiedAsDate.getTime())*0.1));
-                        } catch(DateParseException e) {
+                                    +Math.round((responseDate.getTime()-lastModifiedAsDate.getTime())*0.1));                                
+                        } else {
                             // date or lastModified may be null or in bad format
                             if(log.isWarnEnabled()) {
                                 log.warn("Failed computing expiration date with following info:"

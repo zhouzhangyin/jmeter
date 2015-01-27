@@ -36,8 +36,10 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.jmeter.samplers.SampleResult;
 
 import javax.net.ssl.SSLSession;
+
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -263,6 +265,24 @@ public class MeasuringConnectionManager extends PoolingClientConnectionManager {
         @Override
         public HttpConnectionMetrics getMetrics() {
             return handler.getMetrics();
+        }
+
+        @Override
+        public String getId() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public void bind(Socket socket) throws IOException {
+            // TODO Auto-generated method stub
+            
+        }
+
+        @Override
+        public Socket getSocket() {
+            // TODO Auto-generated method stub
+            return null;
         }
     }
 }
