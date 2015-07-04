@@ -22,9 +22,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -114,11 +115,26 @@ public class SummaryReport extends AbstractVisualizer implements Clearable, Acti
             null, // Mean
             null, // Min
             null, // Max
-            new NumberRenderer("#0.00"), // Std Dev.
-            new NumberRenderer("#0.00%"), // Error %age
-            new RateRenderer("#.0"),      // Throughput
-            new NumberRenderer("#0.00"),  // kB/sec
-            new NumberRenderer("#.0"),    // avg. pageSize
+            new NumberRenderer("#0.00"), // Std Dev. //$NON-NLS-1$
+            new NumberRenderer("#0.00%"), // Error %age //$NON-NLS-1$
+            new RateRenderer("#.0"),      // Throughput //$NON-NLS-1$
+            new NumberRenderer("#0.00"),  // kB/sec //$NON-NLS-1$
+            new NumberRenderer("#.0"),    // avg. pageSize //$NON-NLS-1$
+        };
+    
+    // Column formats
+    static final Format[] FORMATS =
+        new Format[]{
+            null, // Label
+            null, // count
+            null, // Mean
+            null, // Min
+            null, // Max
+            new DecimalFormat("#0.00"), // Std Dev. //$NON-NLS-1$
+            new DecimalFormat("#0.00%"), // Error %age //$NON-NLS-1$
+            new DecimalFormat("#.0"),      // Throughput //$NON-NLS-1$
+            new DecimalFormat("#0.00"),  // kB/sec //$NON-NLS-1$
+            new DecimalFormat("#.0"),    // avg. pageSize //$NON-NLS-1$
         };
 
     public SummaryReport() {
@@ -257,10 +273,8 @@ public class SummaryReport extends AbstractVisualizer implements Clearable, Acti
             FileWriter writer = null;
             try {
                 writer = new FileWriter(chooser.getSelectedFile());
-                CSVSaveService.saveCSVStats(StatGraphVisualizer.getAllTableData(model),writer, 
+                CSVSaveService.saveCSVStats(StatGraphVisualizer.getAllTableData(model, FORMATS),writer, 
                         saveHeaders.isSelected() ? StatGraphVisualizer.getLabels(COLUMNS) : null);
-            } catch (FileNotFoundException e) {
-                JMeterUtils.reportErrorToUser(e.getMessage(), "Error saving data");
             } catch (IOException e) {
                 JMeterUtils.reportErrorToUser(e.getMessage(), "Error saving data");
             } finally {

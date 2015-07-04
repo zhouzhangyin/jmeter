@@ -18,7 +18,7 @@
 
 package org.apache.jmeter.protocol.http.modifier;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -48,23 +48,23 @@ public class TestAnchorModifier extends JMeterTestCase {
         }
 
         public void testProcessingHTMLFile(String HTMLFileName) throws Exception {
-            HTTPSamplerBase config = (HTTPSamplerBase) SaveService.loadTree(
-                    new FileInputStream(System.getProperty("user.dir") + "/testfiles/load_bug_list.jmx")).getArray()[0];
+            File file = new File(System.getProperty("user.dir") + "/testfiles/load_bug_list.jmx");
+            HTTPSamplerBase config = (HTTPSamplerBase) SaveService.loadTree(file).getArray()[0];
             config.setRunningVersion(true);
             HTTPSampleResult result = new HTTPSampleResult();
-            HTTPSamplerBase context = (HTTPSamplerBase) SaveService.loadTree(
-                    new FileInputStream(System.getProperty("user.dir") + "/testfiles/Load_JMeter_Page.jmx")).getArray()[0];
+            file = new File(System.getProperty("user.dir") + "/testfiles/Load_JMeter_Page.jmx");
+            HTTPSamplerBase context = (HTTPSamplerBase) SaveService.loadTree(file).getArray()[0];
             jmctx.setCurrentSampler(context);
             jmctx.setCurrentSampler(config);
             result.setResponseData(new TextFile(System.getProperty("user.dir") + HTMLFileName).getText(), null);
             result.setSampleLabel(context.toString());
             result.setSamplerData(context.toString());
-            result.setURL(new URL("http://issues.apache.org/fakepage.html"));
+            result.setURL(new URL("http://bz.apache.org/fakepage.html"));
             jmctx.setPreviousResult(result);
             AnchorModifier modifier = new AnchorModifier();
             modifier.setThreadContext(jmctx);
             modifier.process();
-            assertEquals("http://issues.apache.org/bugzilla/buglist.cgi?"
+            assertEquals("http://bz.apache.org/bugzilla/buglist.cgi?"
                     + "bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED"
                     + "&email1=&emailtype1=substring&emailassigned_to1=1"
                     + "&email2=&emailtype2=substring&emailreporter2=1" + "&bugidtype=include&bug_id=&changedin=&votes="
@@ -74,7 +74,7 @@ public class TestAnchorModifier extends JMeterTestCase {
                     + "&keywords_type=anywords" + "&field0-0-0=noop&type0-0-0=noop&value0-0-0="
                     + "&cmdtype=doit&order=Reuse+same+sort+as+last+time", config.toString());
             config.recoverRunningVersion();
-            assertEquals("http://issues.apache.org/bugzilla/buglist.cgi?"
+            assertEquals("http://bz.apache.org/bugzilla/buglist.cgi?"
                     + "bug_status=.*&bug_status=.*&bug_status=.*&email1="
                     + "&emailtype1=substring&emailassigned_to1=1&email2=" + "&emailtype2=substring&emailreporter2=1"
                     + "&bugidtype=include&bug_id=&changedin=&votes=" + "&chfieldfrom=&chfieldto=Now&chfieldvalue="

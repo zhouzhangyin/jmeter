@@ -17,19 +17,19 @@
 -->
 
 <!DOCTYPE document[
-<!ENTITY sect-num '17'>
+<!ENTITY sect-num '18'>
 ]>
 
 <document prev="best-practices.html" next="component_reference.html" id="$Id$">
 
 <properties>
-  <author email="mramshaw@alumni.concordia.ca">Martin Ramshaw</author>
+  <author email="dev@jmeter.apache.org">JMeter developers</author>
   <title>User's Manual: My boss wants me to...</title>
 </properties>
 
 <body>
 
-<section name="&sect-num;. Help! My boss wants me to load test our web app!" anchor="boss">
+<section name="&sect-num;. Help! My boss wants me to load test our application!" anchor="boss">
 <p>This is a fairly open-ended proposition. There are a number of questions to
 be asked first, and additionally a number of resources that will be needed. You
 will need some hardware to run the benchmarks/load-tests from. A number of
@@ -37,15 +37,15 @@ tools will prove useful. There are a number of products to consider.  And finall
 why is Java a good choice to implement a load-testing/Benchmarking product.
 </p>
 <subsection name="&sect-num;.1 Questions to ask" anchor="questions">
-<p>What is our anticipated average number of users (normal load) ?
+<p>What is our anticipated average number of users (normal load)?
 </p>
-<p>What is our anticipated peak number of users ?
+<p>What is our anticipated peak number of users?
 </p>
 <p>When is a good time to load-test our application (i.e. off-hours or week-ends),
-bearing in mind that this may very well crash one or more of our servers ?
+bearing in mind that this may very well crash one or more of our servers?
 </p>
-<p>Does our application have state ? If so, how does our application manage it
-(cookies, session-rewriting, or some other method) ?
+<p>Does our application have state? If so, how does our application manage it
+(cookies, session-rewriting, or some other method)?
 </p>
 <p>What is the testing intended to achieve?</p>
 </subsection>
@@ -56,17 +56,17 @@ already have your work cut out for you, it is worth knowing who the following
 people are, so that you can ask them for help if you need it.
 </p>
     <subsection name="&sect-num;.2.1 Network" anchor="network">
-    <p>Who knows our network topology ? If you run into any firewall or
+    <p>Who knows our network topology? If you run into any firewall or
     proxy issues, this will become very important. As well, a private
     testing network (which will therefore have very low network latency)
     would be a very nice thing. Knowing who can set one up for you
     (if you feel that this is necessary) will be very useful. If the
     application doesn't scale as expected, who can add additional
-    hardware ?
+    hardware?
     </p>
     </subsection>
     <subsection name="&sect-num;.2.2 Application" anchor="application">
-    <p>Who knows how our application functions ? The normal sequence is
+    <p>Who knows how our application functions? The normal sequence is
     <ul>
         <li>test (low-volume - can we benchmark our application?)</li>
         <li>benchmark (the average number of users)</li>
@@ -78,11 +78,10 @@ people are, so that you can ask them for help if you need it.
     no knowledge of the application [it is treated as a "black box"]
     while the second requires some knowledge of the application).
     It is not uncommon to discover problems with the application
-    during this process, so be prepared to defend your work.
-    </p>
+    during this process, so be prepared to defend your work.</p>
     </subsection>
 </subsection>
-<subsection name="&sect-num;.3 What platform should I use to run the benchmarks/load-tests ?" anchor="platform">
+<subsection name="&sect-num;.3 What platform should I use to run the benchmarks/load-tests?" anchor="platform">
 <p>This should be a widely-used piece of hardware, with a standard
 (i.e. vanilla) software installation. Remember, if you publish your results,
 the first thing your clients will do is hire a graduate student to verify them.
@@ -97,21 +96,34 @@ you have a little more money, there are commercial linuxes.
 This may be worth it if you need the support.
 </p>
 <p>
-For non-Windows platforms, investigate "ulimit -n unlimited" with a view to
-including it in your user account startup scripts (.bashrc or .cshrc scripts
+For non-Windows platforms, investigate "<code>ulimit -n unlimited</code>" with a view to
+including it in your user account startup scripts (<code>.bashrc</code> or <code>.cshrc</code> scripts
 for the testing account).
+</p>
+<p>
+Also note that some Linux/Unix editions are intended for server use.
+These generally have minimal or no GUI support.
+Such OSes should be OK for running JMeter in non-GUI mode, but JMeter GUI mode probably won't work
+unless you install a minimal GUI environment.
 </p>
 <p>As you progress to larger-scale benchmarks/load-tests, this platform
 will become the limiting factor. So it's worth using the best hardware and
 software that you have available. Remember to include the hardware/software
 configuration in your published benchmarks.
 </p>
-<p>Don't forget JMeter batch mode. This can be useful if you have a powerful server 
-that supports Java but perhaps does not have a fast graphics implementation,
-or where you need to login remotely.
-Batch (non-GUI) mode can reduce the network traffic compared with using a remote display or client-server mode.
+<p><b>When you need a lot of machines or want to test the network latency, Cloud can help you.</b>
+JMeter can easily be installed on Cloud instances as it runs on nearly any architecture available in the Cloud.
+JMeter is also supported within Commercial Cloud PAAS if you don't want to manage it yourself. 
+</p>
+<p>Don't forget JMeter batch (NON-GUI) mode. This mode should be used during load testing for many reasons:
+<ul>
+<li>If you have a powerful server that supports Java but perhaps does not have a fast graphics implementation, or where you need to login remotely.</li>
+<li>Batch (non-GUI) mode can reduce the network traffic compared with using a remote display or client-server mode.</li>
+<li>Java AWT Thread used for GUI mode can alter injection behaviour by blocking sometimes</li>
+</ul>
 The batch log file can then be loaded into JMeter on a workstation for analysis, or you can
 use CSV output and import the data into a spreadsheet.</p>
+<note>Remember GUI mode is for Script creation and debugging, not for load testing</note>
 </subsection>
 <subsection name="&sect-num;.4 Tools" anchor="tools">
 <p>The following tools will all prove useful. It is definitely worthwhile to
@@ -122,21 +134,21 @@ and any supplied documentation).
     <subsection name="&sect-num;.4.1 ping" anchor="ping">
     <p>
     This can be used to establish whether or not you can reach your
-    target site. Options can be specified so that 'ping' provides the
-    same type of route reporting as 'traceroute'.
+    target site. Options can be specified so that '<code>ping</code>' provides the
+    same type of route reporting as '<code>traceroute</code>'.
     </p>
     </subsection>
     <subsection name="&sect-num;.4.2 nslookup/dig" anchor="dig">
     <p>
-    While the <u>user</u> will normally use a human-readable internet
-    address, <u>you</u> may wish to avoid the overhead of DNS lookups when
+    While the <b>user</b> will normally use a human-readable internet
+    address, <b>you</b> may wish to avoid the overhead of DNS lookups when
     performing benchmarking/load-testing. These can be used to determine
     the unique address (dotted quad) of your target site.
     </p>
     </subsection>
     <subsection name="&sect-num;.4.3 traceroute" anchor="traceroute">
     <p>
-    If you cannot "ping" your target site, this may be used to determine 
+    If you cannot "<code>ping</code>" your target site, this may be used to determine 
     the problem (possibly a firewall or a proxy). It can also be used
     to estimate the overall network latency (running locally should give
     the lowest possible network latency - remember that your users will
@@ -145,48 +157,21 @@ and any supplied documentation).
     </p>
     </subsection>
 </subsection>
-<subsection name="&sect-num;.5 What other products are there ?" anchor="products">
-<p>There are a number of commercial products, which generally have fairly
-hefty pricetags. If you can justify it, these are probably the way to go.
-If, however, these products do not do exactly what you want, or you are on a
-limited budget, the following are worth a look. In fact, you should probably
-start by trying the Apache <b>ab</b> tool, as it may very well do the job
-if your requirements are not particularly complicated.
+<subsection name="&sect-num;.5 How can I enhance JMeter?" anchor="plugins">
+<p>There a lot of open-source and commercial providers who provide JMeter plugins or other resources for use with JMeter.
+Some of these are listed on the JMeter Wiki.
+They are listed under several categories:
+<ul>
+<li><a href="http://wiki.apache.org/jmeter/JMeterPlugins">JMeterPlugins</a> - plugins for extending JMeter</li>
+<li><a href="http://wiki.apache.org/jmeter/JMeterAddons">JMeterAddons</a> - addons for use with JMeter, e.g. plugins for browsers, Maven and Jenkins.</li>
+<li><a href="http://wiki.apache.org/jmeter/JMeterServices">JMeterServices</a> - 3rd party services, e.g. cloud-based JMeter</li>
+</ul>
+Note that appearance of these on the Wiki does not imply any endorsement by the Apache JMeter project.
+Any requests for support should be directed to the relevant supplier.
 </p>
-    <subsection name="&sect-num;.5.1 Apache 'ab' tool" anchor="ab">
-    <p>
-    You should definitely start with this one. It handles HTTP 'get' requests
-    very well, and can be made to handle HTTP 'post' requests with a little
-    effort. Written in 'C', it performs very well, and offers good (if basic)
-    performance reporting.
-    </p>
-    </subsection>
-    <subsection name="&sect-num;.5.2 HttpUnit" anchor="httpunit">
-    <p>
-    This is worth a look. It is a library (and therefore of more interest to
-    developers) that can be used to perform HTTP tests/benchmarks. It is
-    intended to be used instead of a web browser (therefore no GUI) in
-    conjunction with <b>JUnit</b>.
-    </p>
-    </subsection>
-    <subsection name="&sect-num;.5.3 Microsoft WAS" anchor="WAS">
-    <p>
-    This is definitely worth a look. It has an excellent user interface
-    but it may not do exactly what you want. If this is the case, be aware
-    that the functionality of this product is not likely to change.
-    </p>
-    </subsection>
-    <subsection name="&sect-num;.5.4 JMeter" anchor="JMeter">
-    <p>
-    If you have non-standard requirements, then this solution offers an
-    open-source community to provide them (of course, if you are reading
-    <u>this</u>, you are probably already committed to this one). This
-    product is free to evolve along with your requirements.
-    </p>
-    </subsection>
 </subsection>
-<subsection name="&sect-num;.6 Why Java ?" anchor="java">
-<p>Why not Perl or C ?
+<subsection name="&sect-num;.6 Why Java?" anchor="java">
+<p>Why not Perl or C?
 </p>
 <p>Well, Perl might be a very good choice except that the Benchmark package
 seems to give fairly fuzzy results. Also, simulating multiple users with
@@ -196,7 +181,7 @@ be processes). However, the Perl community is very large. If you find that
 someone has already written something that seems useful, this could be a very
 good solution.
 </p>
-<p>C, of course, is a very good choice (check out the Apache <b>ab</b> tool).
+<p>C, of course, is a very good choice (check out the Apache <code>ab</code> tool).
 But be prepared to write all of the custom networking, threading, and state
 management code that you will need to benchmark your application.
 </p>
@@ -205,10 +190,6 @@ management code that you will need to benchmark your application. Java is
 aware of HTTP, FTP, and HTTPS - as well as RMI, IIOP, and JDBC (not to mention
 cookies, URL-encoding, and URL-rewriting). In addition Java gives you automatic
 garbage-collection, and byte-code level security.
-</p>
-<p>And once Microsoft moves to a CLR (common language run-time) a Windows Java
-solution will not be any slower than any other type of solution on the Windows
-platform.
 </p>
 </subsection>
 </section>

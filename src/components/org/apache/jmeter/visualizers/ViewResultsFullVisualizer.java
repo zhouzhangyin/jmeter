@@ -92,7 +92,7 @@ implements ActionListener, TreeSelectionListener, Clearable, ItemListener {
 
     private JTabbedPane rightSide;
 
-    private JComboBox selectRenderPanel;
+    private JComboBox<ResultRenderer> selectRenderPanel;
 
     private int selectedTab;
 
@@ -307,9 +307,9 @@ implements ActionListener, TreeSelectionListener, Clearable, ItemListener {
      * @return List of all render (implement ResultsRender)
      */
     private Component createComboRender() {
-        ComboBoxModel nodesModel = new DefaultComboBoxModel();
+        ComboBoxModel<ResultRenderer> nodesModel = new DefaultComboBoxModel<>();
         // drop-down list for renderer
-        selectRenderPanel = new JComboBox(nodesModel);
+        selectRenderPanel = new JComboBox<>(nodesModel);
         selectRenderPanel.setActionCommand(COMBO_CHANGE_COMMAND);
         selectRenderPanel.addActionListener(this);
 
@@ -364,7 +364,7 @@ implements ActionListener, TreeSelectionListener, Clearable, ItemListener {
     public void actionPerformed(ActionEvent event) {
         String command = event.getActionCommand();
         if (COMBO_CHANGE_COMMAND.equals(command)) {
-            JComboBox jcb = (JComboBox) event.getSource();
+            JComboBox<?> jcb = (JComboBox<?>) event.getSource();
 
             if (jcb != null) {
                 resultsRender = (ResultRenderer) jcb.getSelectedItem();
@@ -399,7 +399,7 @@ implements ActionListener, TreeSelectionListener, Clearable, ItemListener {
             // could warn the user
             // if this happens and revert the choice if he doesn't confirm
             // he's ready to wait.
-            int len = res.getResponseData().length;
+            int len = res.getResponseDataAsString().length();
             if (MAX_DISPLAY_SIZE > 0 && len > MAX_DISPLAY_SIZE) {
                 StringBuilder builder = new StringBuilder(MAX_DISPLAY_SIZE+100);
                 builder.append(JMeterUtils.getResString("view_results_response_too_large_message")) //$NON-NLS-1$

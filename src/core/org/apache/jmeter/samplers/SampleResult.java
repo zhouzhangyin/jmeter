@@ -73,7 +73,7 @@ public class SampleResult implements Serializable, Cloneable {
     private static final String DEFAULT_CHARSET = Charset.defaultCharset().name();
 
     /**
-     * Data type value indicating that the response data is text.
+     * Data type value ({@value}) indicating that the response data is text.
      *
      * @see #getDataType
      * @see #setDataType(java.lang.String)
@@ -81,7 +81,7 @@ public class SampleResult implements Serializable, Cloneable {
     public static final String TEXT = "text"; // $NON-NLS-1$
 
     /**
-     * Data type value indicating that the response data is binary.
+     * Data type value ({@value}) indicating that the response data is binary.
      *
      * @see #getDataType
      * @see #setDataType(java.lang.String)
@@ -159,6 +159,13 @@ public class SampleResult implements Serializable, Cloneable {
 
     private List<SampleResult> subResults;
 
+    /**
+     * The data type of the sample
+     * @see #getDataType()
+     * @see #setDataType(String)
+     * @see #TEXT
+     * @see #BINARY
+     */
     private String dataType=""; // Don't return null if not set
 
     private boolean success;
@@ -588,7 +595,7 @@ public class SampleResult implements Serializable, Cloneable {
      */
     public void addSubResult(SampleResult subResult) {
         if(subResult == null) {
-            // see https://issues.apache.org/bugzilla/show_bug.cgi?id=54778
+            // see https://bz.apache.org/bugzilla/show_bug.cgi?id=54778
             return;
         }
         String tn = getThreadName();
@@ -756,13 +763,27 @@ public class SampleResult implements Serializable, Cloneable {
         return success;
     }
 
+    /**
+     * Sets the data type of the sample.
+     * @param dataType String containing {@link BINARY} or {@link TEXT}
+     * @see #BINARY
+     * @see #TEXT
+     */
     public void setDataType(String dataType) {
         this.dataType = dataType;
     }
 
+    /**
+     * Returns the data type of the sample.
+     * 
+     * @return String containing {@link BINARY} or {@link TEXT} or the empty string
+     * @see #BINARY
+     * @see #TEXT
+     */
     public String getDataType() {
         return dataType;
     }
+
     /**
      * Extract and save the DataEncoding and DataType from the parameter provided.
      * Does not save the full content Type.
@@ -809,7 +830,8 @@ public class SampleResult implements Serializable, Cloneable {
 
     // List of types that are known to be ascii, although they may appear to be binary
     private static final String[] NON_BINARY_TYPES = {
-        "video/f4m",       //$NON-NLS-1$ (Flash Media Manifest)
+        "audio/x-mpegurl",  //$NON-NLS-1$ (HLS Media Manifest)
+        "video/f4m"         //$NON-NLS-1$ (Flash Media Manifest)
         };
 
     /*

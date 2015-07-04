@@ -33,12 +33,12 @@
       ant clean install
 
     To update documentation
-      ant docs-site
-      ant docs-printable
+      ant docs-site [-Ddocs.force=true]
+      ant docs-printable [-Ddocs.force=true]
     To build API documentation (Javadoc)
       ant docs-api
     To build all the docs
-      ant docs-all
+      ant docs-all [-Ddocs.force=true]
 
     To build all and package up the files for distribution
       ant distribution -Djmeter.version=vvvv [-Dsvn.revision=nnnnn]
@@ -142,7 +142,6 @@
       <class location="${dest.jar}/ApacheJMeter_monitors.jar"/>
       <class location="${dest.jar}/ApacheJMeter_native.jar"/>
       <class location="${dest.jar}/ApacheJMeter_mongodb.jar"/>
-      <class location="${dest.jar}/ApacheJMeter_report.jar"/>
       <class location="${dest.jar}/ApacheJMeter_tcp.jar"/>
       <class location="${dest.jar.jmeter}/ApacheJMeter.jar" />
       <sourcePath path="${src.jorphan}" />
@@ -150,7 +149,6 @@
       <sourcePath path="${src.jms}" />
       <sourcePath path="${src.native}" />
       <sourcePath path="${src.mongodb}" />
-      <sourcePath path="${src.report}" />
 
       <auxClasspath>
           <fileset dir="${lib.dir}">
@@ -214,7 +212,6 @@
   <property name="src.jms" value="src/protocol/jms"/>
   <property name="src.native" value="src/protocol/native"/>
   <property name="src.mongodb" value="src/protocol/mongodb"/>
-  <property name="src.report" value="src/reports"/>
 
   <!-- Where the documentation sources live -->
   <property name="src.docs" value="xdocs"/>
@@ -242,7 +239,6 @@
     <pathelement location="${src.jms}"/>
     <pathelement location="${src.native}"/>
     <pathelement location="${src.mongodb}"/>
-    <pathelement location="${src.report}"/>
   </path>
 
   <!-- Temporary build directories: where the .class live -->
@@ -265,7 +261,6 @@
   <property name="build.jms" value="build/protocol/jms"/>
   <property name="build.native" value="build/protocol/native"/>
   <property name="build.mongodb" value="build/protocol/mongodb"/>
-  <property name="build.report" value="build/reports"/>
   <property name="build.test" value="build/test"/>
   <property name="build.res" value="build/res"/>
 
@@ -299,8 +294,14 @@
   <property name="dest.docs" value="docs"/>
   <property name="dest.printable_docs" value="printable_docs"/>
 
+  <!-- Whether to force docs to be rebuilt -->
+  <property name="docs.force" value="false"/>
+
   <!-- Default is for Anakia to only rebuild if the target file is older than the source -->
-  <property name="anakia.lastModifiedCheck" value="true"/>
+  <condition property="anakia.lastModifiedCheck" value="true" else="false">
+    <!-- docs.force uses the opposite sense to the anakia check -->
+    <isfalse value="${docs.force}"/>
+  </condition>
 
   <!-- Directory where jars needed for creating documentation live -->
   <property name="lib.doc" value="lib/doc"/>
@@ -332,8 +333,8 @@
   <!-- Compilation parameters -->
   <property name="optimize" value="on"/>
   <property name="deprecation" value="off"/>
-  <property name="target.java.version" value="1.6"/>
-  <property name="src.java.version" value="1.6"/>
+  <property name="target.java.version" value="1.7"/>
+  <property name="src.java.version" value="1.7"/>
   <property name="encoding" value="UTF-8"/>
   <!-- Set test encoding to the same default, but allow override -->
   <property name="test.encoding" value="${encoding}"/>
@@ -515,7 +516,7 @@
         JMeter version
         This is overridden for formal releases.
     -->
-    <property name="jmeter.version" value="2.12-SNAPSHOT"/>
+    <property name="jmeter.version" value="2.14-SNAPSHOT"/>
     <!-- Remember to change "docversion" below if necessary -->
     <condition property="implementation.version"
           value="${jmeter.version} r${svn.revision}" else="${jmeter.version}.${DSTAMP}">
@@ -640,7 +641,6 @@
         <pathelement location="${build.mail}"/>
         <pathelement location="${build.monitor.components}"/>
         <pathelement location="${build.monitor.model}"/>
-        <pathelement location="${build.report}"/>
         <pathelement location="${build.tcp}"/>
         <!-- Also include compiled jars to allow running tests without rebuilding source -->
         <fileset dir="${dest.jar}" includes="*.jar"/>
@@ -727,21 +727,6 @@
       <classpath>
         <pathelement location="${build.jorphan}"/>
         <pathelement location="${build.core}"/>
-        <path refid="classpath"/>
-      </classpath>
-    </javac>
-  </target>
-
-  <target name="compile-report" depends="compile-jorphan,compile-core,compile-components"
-    description="Compile report components.">
-    <mkdir dir="${build.report}"/>
-    <javac srcdir="${src.report}" destdir="${build.report}" source="${src.java.version}" optimize="${optimize}" debug="on" target="${target.java.version}"
-           includeAntRuntime="${includeAntRuntime}" deprecation="${deprecation}" encoding="${encoding}">
-      <include name="**/*.java"/>
-      <classpath>
-        <pathelement location="${build.jorphan}"/>
-        <pathelement location="${build.core}"/>
-        <pathelement location="${build.components}"/>
         <path refid="classpath"/>
       </classpath>
     </javac>
@@ -861,7 +846,7 @@
   </target>
 
   <target name="compile"
-  depends="_message_3rdParty,compile-core,compile-components,compile-functions,compile-protocols,compile-monitor,compile-junit,compile-jms,compile-native, compile-mongodb, compile-report"
+  depends="_message_3rdParty,compile-core,compile-components,compile-functions,compile-protocols,compile-monitor,compile-junit,compile-jms,compile-native, compile-mongodb"
   description="Compile everything."/>
 
   <target name="run_gui" depends="package" description="Run the JMeter GUI off the jar files">
@@ -965,7 +950,7 @@ run JMeter unless all the JMeter jars are added.
       <fileset dir="${build.core}" includes="**/*.class"
         excludes="**/BeanShellClient*.class,**/NewDriver*,**/DynamicClassLoader*"/>
       <fileset dir="${src.core}" includes="org/apache/jmeter/images/**"
-        excludes="**/*.properties"/>
+        excludes="**/*.properties,org/apache/jmeter/images/toolbar/icons-custom/**"/>
       <fileset dir="${src.core}" includes="**/*.properties">
         <exclude name="*eucJP*"/>
       </fileset>
@@ -1063,16 +1048,6 @@ run JMeter unless all the JMeter jars are added.
         fullpath="META-INF/LICENSE" />
       <fileset dir="${build.junit}" excludes="org/**/*" />
       <fileset dir="${src.junit}"   excludes="org/**/*" />
-    </jar>
-
-    <!-- report -->
-    <jar jarfile="${dest.jar}/ApacheJMeter_report.jar" manifest="${build.dir}/MANIFEST_BIN.MF">
-      <zipfileset file="${resources.meta-inf}/default.notice"
-        fullpath="META-INF/NOTICE" />
-      <zipfileset file="${resources.meta-inf}/default.license"
-        fullpath="META-INF/LICENSE" />
-      <fileset dir="${build.report}" includes="**/*.class" />
-      <fileset dir="${src.report}" includes="**/*.properties" />
     </jar>
 
     <!-- ldap -->
@@ -1186,7 +1161,7 @@ run JMeter unless all the JMeter jars are added.
   </target>
 
   <target name="install" depends="package" description="Install JMeter. (Compiles code and creates jars)">
-    <fixcrlf encoding="${encoding}" srcdir="." eol="lf" includes="bin/*.sh bin/jmeter bin/jmeter-server bin/jmeter-report bin/mirror-server"/>
+    <fixcrlf encoding="${encoding}" srcdir="." eol="lf" includes="bin/*.sh bin/jmeter bin/jmeter-server bin/mirror-server"/>
   </target>
 
   <target name="install-examples" depends="compile-examples" description="Build and installs the example components.">
@@ -1293,7 +1268,7 @@ run JMeter unless all the JMeter jars are added.
       These need special handling to create the correct file mode
   -->
   <property name="dist.executables"
-    value="${dest.jar.jmeter}/jmeter ${dest.jar.jmeter}/jmeter-server ${dest.jar.jmeter}/jmeter-report ${dest.jar.jmeter}/mirror-server ${dest.jar.jmeter}/*.sh ${extras.dir}/*.sh"/>
+    value="${dest.jar.jmeter}/jmeter ${dest.jar.jmeter}/jmeter-server ${dest.jar.jmeter}/mirror-server ${dest.jar.jmeter}/*.sh ${extras.dir}/*.sh"/>
 
   <!-- List of files in source distribution that are eol=native -->
   <!--
@@ -1959,7 +1934,6 @@ run JMeter unless all the JMeter jars are added.
     <deployfile stem="ApacheJMeter_mongodb"/>
     <deployfile stem="ApacheJMeter_monitors"/>
     <deployfile stem="ApacheJMeter_native"/>
-    <deployfile stem="ApacheJMeter_report"/>
     <deployfile stem="ApacheJMeter_tcp"/>
   </target>
 
@@ -2196,6 +2170,9 @@ run JMeter unless all the JMeter jars are added.
   </target>
 
   <target name="docs-api" description="Generate the API documentation.">
+    <available property="jdk1.7+" classname="java.lang.AutoCloseable"/> 
+    <fail unless="jdk1.7+"
+          message="Must use Java 7 or later for creating the Javadocs"/>
     <tstamp>
       <!-- Used to ensure end-year is up to date -->
       <format property="THISYEAR" pattern="yyyy"/>
@@ -2229,79 +2206,10 @@ run JMeter unless all the JMeter jars are added.
       <classpath refid="classpath"/>
       <link href="http://docs.oracle.com/javase/6/docs/api/"/>
     </javadoc>
-    <patch-javadoc dir="${dest.docs.api}" docencoding="${javadoc.encoding}"/>
+    <!-- No need for Javadoc patch (CVE-2013-1571) now we are using Java 7 minimum -->
   </target>
 
-  <!-- Macro copied from: http://svn.apache.org/repos/asf/tomcat/tc7.0.x/trunk/build.xml r1495881 -->
       <!--
-        Patch frame injection bugs in javadoc generated files - see CVE-2013-1571,
-        http://www.kb.cert.org/vuls/id/225657
-
-        This macro works together with the javadoc task on Ant and should be invoked
-        directly after its execution to patch broken javadocs, e.g.:
-        <patch-javadoc dir="..." docencoding="UTF-8"/>
-        Please make sure that the docencoding parameter uses the same charset as
-        javadoc's docencoding. Default is the platform default encoding (like the
-        javadoc task).
-        The specified dir is the destination directory of the javadoc task.
-      -->
-      <macrodef name="patch-javadoc">
-        <attribute name="dir"/>
-        <attribute name="docencoding" default="${file.encoding}"/>
-        <sequential>
-          <replace encoding="@{docencoding}" summary="true" taskname="patch-javadoc">
-            <restrict>
-              <fileset dir="@{dir}" casesensitive="false"
-                  includes="**/index.html,**/index.htm,**/toc.html,**/toc.htm"/>
-              <!-- TODO: add encoding="@{docencoding}" to contains check, when we
-                   are on ANT 1.9.0: -->
-              <not>
-                <contains text="function validURL(url) {" casesensitive="true" />
-              </not>
-            </restrict>
-            <replacetoken><![CDATA[function loadFrames() {]]></replacetoken>
-            <replacevalue expandProperties="false"><![CDATA[if (targetPage != "" && !validURL(targetPage))
-            targetPage = "undefined";
-    function validURL(url) {
-        var pos = url.indexOf(".html");
-        if (pos == -1 || pos != url.length - 5)
-            return false;
-        var allowNumber = false;
-        var allowSep = false;
-        var seenDot = false;
-        for (var i = 0; i < url.length - 5; i++) {
-            var ch = url.charAt(i);
-            if ('a' <= ch && ch <= 'z' ||
-                    'A' <= ch && ch <= 'Z' ||
-                    ch == '$' ||
-                    ch == '_') {
-                allowNumber = true;
-                allowSep = true;
-            } else if ('0' <= ch && ch <= '9'
-                    || ch == '-') {
-                if (!allowNumber)
-                     return false;
-            } else if (ch == '/' || ch == '.') {
-                if (!allowSep)
-                    return false;
-                allowNumber = false;
-                allowSep = false;
-                if (ch == '.')
-                     seenDot = true;
-                if (ch == '/' && seenDot)
-                     return false;
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-    function loadFrames() {]]></replacevalue>
-          </replace>
-        </sequential>
-      </macrodef>
-
-<!--
     Run Doccheck: See http://java.sun.com/j2se/javadoc/doccheck/docs/DocCheck.html
     and http://java.sun.com/j2se/javadoc/doccheck/
     Download the doclet, and put the jar in lib/opt.
@@ -2325,23 +2233,42 @@ run JMeter unless all the JMeter jars are added.
     </javadoc>
 </target>
 
-  <target name="docs-site" depends="init-docs" if="AnakiaTask.present" description="Generate browsable HTML documentation in web-site format.">
-    <taskdef name="anakia" classpathref="anakia.classpath" classname="org.apache.velocity.anakia.AnakiaTask"/>
+  <target name="docs-site" depends="init-docs" description="Generate browsable HTML documentation in web-site format.">
+    <mkdir dir="${dest.docs}" />
     <!-- The extending pages are rather out of date (and not linked from elsewhere) -->
-    <anakia basedir="${src.docs}" destdir="${dest.docs}/" extension=".html" style="${eclipse.anakia}/xdocs/stylesheets/site.vsl" projectFile="./stylesheets/project.xml"
-        excludes="**/stylesheets/** extending.xml extending/*.xml"
-        includes="**/*.xml" lastModifiedCheck="${anakia.lastModifiedCheck}" velocityPropertiesFile="${src.docs}/velocity.properties"/>
-    <echo level="info">Fixing EOL</echo>
-    <fixcrlf encoding="iso-8859-1" srcdir="${dest.docs}/" includes="**/*.html" excludes="api/**" fixlast="false"/>
-    <echo level="info">Removing unnecessary &lt;/br> tags</echo>
-    <replace encoding="iso-8859-1" dir="${dest.docs}/" includes="**/*.html" token="&lt;/br>" value=""/>
-    <echo level="info">Copying files</echo>
-    <copy todir="${dest.docs}/css">
-      <fileset dir="${src.css}"/>
-    </copy>
+    <xslt style="xdocs/stylesheets/website-style.xsl" basedir="${src.docs}" destdir="${dest.docs}"
+      force="${docs.force}" excludes="extending.xml" includes="*.xml">
+      <param name="relative-path" expression="." />
+      <param name="subdir" expression="" />
+      <param name="year" expression="${year}" />
+    </xslt>
+    <xslt style="xdocs/stylesheets/website-style.xsl" basedir="${src.docs}/usermanual" destdir="${dest.docs}/usermanual"
+      force="${docs.force}" includes="*.xml">
+      <param name="relative-path" expression=".." />
+      <param name="subdir" expression="usermanual" />
+      <param name="year" expression="${year}" />
+    </xslt>
+    <xslt style="xdocs/stylesheets/website-style.xsl" basedir="${src.docs}/localising" destdir="${dest.docs}/localising"
+      force="${docs.force}" includes="*.xml">
+      <param name="relative-path" expression=".." />
+      <param name="subdir" expression="usermanual" />
+      <param name="year" expression="${year}" />
+    </xslt>
     <copy todir="${dest.docs}/images">
       <fileset dir="${src.images}" excludes="logo.xcf,logo.svg"/>
     </copy>
+    <copy todir="${dest.docs}/css">
+      <fileset dir="${src.css}"/>
+    </copy>
+    <!-- 
+    Note: it's vital that the Javadoc files are excluded from any fixes applied here.
+    Any fixes to Javadoc files need to be done in the docs-api target only.
+    Otherwise the output from the build will depend on which is done first.
+    -->
+    <echo level="info">Fixing EOL</echo>
+    <fixcrlf encoding="iso-8859-1" srcdir="${dest.docs}/" includes="**/*.html" excludes="api/**" fixlast="false"/>
+    <echo level="info">Removing unnecessary &lt;/br> tags</echo>
+    <replace encoding="iso-8859-1" dir="${dest.docs}/" includes="**/*.html" excludes="api/**" token="&lt;/br>" value=""/>
     <copy todir="${dest.docs}/demos">
       <fileset dir="${src.demos}"/>
     </copy>

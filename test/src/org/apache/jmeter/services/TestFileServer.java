@@ -116,4 +116,57 @@ public class TestFileServer extends JMeterTestCase {
         FS.setBaseForScript(file);
         assertEquals("abcd",FS.getBaseDirRelative().toString());
     }
+
+    public void testHeaderMissingFile() throws Exception {
+        final String missing = "no-such-file";
+        final String alias = "missing";
+        final String charsetName = "UTF-8";
+
+        try {
+            FS.reserveFile(missing,charsetName,alias,true);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Expected FNF", e.getCause() instanceof java.io.FileNotFoundException);
+        }
+        // Ensure second invocation gets same behaviour
+        try {
+            FS.reserveFile(missing,charsetName,alias,true);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Expected FNF", e.getCause() instanceof java.io.FileNotFoundException);
+        }
+    }
+
+    public void testHeaderEmptyFile() throws Exception {
+        final String empty = findTestPath("testfiles/empty.csv");
+        final String alias = "empty";
+        final String charsetName = "UTF-8";
+
+        try {
+            String hdr= FS.reserveFile(empty,charsetName,alias,true);
+            fail("Expected IllegalArgumentException|"+hdr+"|");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Expected EOF", e.getCause() instanceof java.io.EOFException);
+        }
+        // Ensure second invocation gets same behaviour
+        try {
+            FS.reserveFile(empty,charsetName,alias,true);
+            fail("Expected IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            assertTrue("Expected EOF", e.getCause() instanceof java.io.EOFException);
+        }
+    }
+
+    public void testResolvingPaths() {
+        final File anchor = new File(findTestPath("testfiles/empty.csv"));
+
+        // absolute
+        assertTrue(FS.getResolvedFile(anchor.getAbsolutePath()).exists());
+
+        // relative
+        assertTrue(FS.getResolvedFile(anchor.getParentFile().getPath() + "/../testfiles/empty.csv").exists());
+        // test-plan-relative
+        FS.setBaseForScript(anchor);
+        assertTrue(FS.getResolvedFile(anchor.getName()).exists());
+    }
 }

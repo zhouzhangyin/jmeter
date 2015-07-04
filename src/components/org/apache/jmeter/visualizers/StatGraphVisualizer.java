@@ -25,9 +25,10 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableCellRenderer;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.jmeter.gui.action.ActionNames;
 import org.apache.jmeter.gui.action.ActionRouter;
 import org.apache.jmeter.gui.action.SaveGraphics;
@@ -215,7 +217,7 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
 
     private int defaultHeight = 300;
 
-    private JComboBox columnsList = new JComboBox(GRAPH_COLUMNS);
+    private JComboBox<String> columnsList = new JComboBox<>(GRAPH_COLUMNS);
 
     private List<BarGraph> eltList = new ArrayList<BarGraph>();
 
@@ -229,25 +231,25 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
 
     private JCheckBox regexpChkBox = new JCheckBox(JMeterUtils.getResString("search_text_chkbox_regexp"), true); // $NON-NLS-1$
 
-    private JComboBox titleFontNameList = new JComboBox(StatGraphProperties.getFontNameMap().keySet().toArray());
+    private JComboBox<String> titleFontNameList = new JComboBox<>(StatGraphProperties.getFontNameMap().keySet().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
 
-    private JComboBox titleFontSizeList = new JComboBox(StatGraphProperties.fontSize);
+    private JComboBox<String> titleFontSizeList = new JComboBox<>(StatGraphProperties.fontSize);
 
-    private JComboBox titleFontStyleList = new JComboBox(StatGraphProperties.getFontStyleMap().keySet().toArray());
+    private JComboBox<String> titleFontStyleList = new JComboBox<>(StatGraphProperties.getFontStyleMap().keySet().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
 
-    private JComboBox valueFontNameList = new JComboBox(StatGraphProperties.getFontNameMap().keySet().toArray());
+    private JComboBox<String> valueFontNameList = new JComboBox<>(StatGraphProperties.getFontNameMap().keySet().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
 
-    private JComboBox valueFontSizeList = new JComboBox(StatGraphProperties.fontSize);
+    private JComboBox<String> valueFontSizeList = new JComboBox<>(StatGraphProperties.fontSize);
 
-    private JComboBox valueFontStyleList = new JComboBox(StatGraphProperties.getFontStyleMap().keySet().toArray());
+    private JComboBox<String> valueFontStyleList = new JComboBox<>(StatGraphProperties.getFontStyleMap().keySet().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
 
-    private JComboBox fontNameList = new JComboBox(StatGraphProperties.getFontNameMap().keySet().toArray());
+    private JComboBox<String> fontNameList = new JComboBox<>(StatGraphProperties.getFontNameMap().keySet().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
 
-    private JComboBox fontSizeList = new JComboBox(StatGraphProperties.fontSize);
+    private JComboBox<String> fontSizeList = new JComboBox<>(StatGraphProperties.fontSize);
 
-    private JComboBox fontStyleList = new JComboBox(StatGraphProperties.getFontStyleMap().keySet().toArray());
+    private JComboBox<String> fontStyleList = new JComboBox<>(StatGraphProperties.getFontStyleMap().keySet().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
 
-    private JComboBox legendPlacementList = new JComboBox(StatGraphProperties.getPlacementNameMap().keySet().toArray());
+    private JComboBox<String> legendPlacementList = new JComboBox<>(StatGraphProperties.getPlacementNameMap().keySet().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
 
     private JCheckBox drawOutlinesBar = new JCheckBox(JMeterUtils.getResString("aggregate_graph_draw_outlines"), true); // Default checked // $NON-NLS-1$
 
@@ -308,6 +310,23 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
                             String.class, String.class });
     }
 
+    // Column formats
+    static final Format[] FORMATS =
+        new Format[]{
+            null, // Label
+            null, // count
+            null, // Mean
+            null, // median
+            null, // 90%
+            null, // 95%
+            null, // 99%
+            null, // Min
+            null, // Max
+            new DecimalFormat("#0.00%"), // Error %age //$NON-NLS-1$
+            new DecimalFormat("#.0"),      // Throughput //$NON-NLS-1$
+            new DecimalFormat("#.0")    // pageSize   //$NON-NLS-1$
+        };
+    
     // Column renderers
     static final TableCellRenderer[] RENDERERS =
         new TableCellRenderer[]{
@@ -574,9 +593,10 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
      * ObjectTableModel, so the calling getDataVector doesn't
      * work as expected.
      * @param model {@link ObjectTableModel}
+     * @param formats Array of {@link Format} array can contain null formatters in this case value is added as is
      * @return the data from the model
      */
-    public static List<List<Object>> getAllTableData(ObjectTableModel model) {
+    public static List<List<Object>> getAllTableData(ObjectTableModel model, Format[] formats) {
         List<List<Object>> data = new ArrayList<List<Object>>();
         if (model.getRowCount() > 0) {
             for (int rw=0; rw < model.getRowCount(); rw++) {
@@ -585,7 +605,11 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
                 data.add(column);
                 for (int idx=0; idx < cols; idx++) {
                     Object val = model.getValueAt(rw,idx);
-                    column.add(val);
+                    if(formats[idx] != null) {
+                        column.add(formats[idx].format(val));
+                    } else {
+                        column.add(val);
+                    }
                 }
             }
         }
@@ -615,9 +639,7 @@ public class StatGraphVisualizer extends AbstractVisualizer implements Clearable
             FileWriter writer = null;
             try {
                 writer = new FileWriter(chooser.getSelectedFile()); // TODO Charset ?
-                CSVSaveService.saveCSVStats(getAllTableData(model),writer,saveHeaders.isSelected() ? getLabels(COLUMNS) : null);
-            } catch (FileNotFoundException e) {
-                JMeterUtils.reportErrorToUser(e.getMessage(), "Error saving data");
+                CSVSaveService.saveCSVStats(getAllTableData(model, FORMATS),writer,saveHeaders.isSelected() ? getLabels(COLUMNS) : null);
             } catch (IOException e) {
                 JMeterUtils.reportErrorToUser(e.getMessage(), "Error saving data");
             } finally {

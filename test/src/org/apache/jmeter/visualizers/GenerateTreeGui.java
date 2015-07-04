@@ -52,15 +52,15 @@ import org.apache.jmeter.util.JMeterUtils;
 /**
  * Workbench test element to create a test plan containing samples of each test element
  * (apart from Threads and Test Fragment).
- * 
+ *<p>
  * The user creates a Thread Group, and the elements are created as child elements of
  * Simple Controllers.
- * 
+ *<p>
  * Note: the code currently runs on all versions of JMeter back to 2.2.
  * Beware of making changes that rely on more recent APIs.
  */
-public class GenerateTreeGui extends AbstractConfigGui
-    implements ActionListener, UnsharedComponent {
+public class GenerateTreeGui extends AbstractConfigGui implements
+        ActionListener, UnsharedComponent {
 
     private static final long serialVersionUID = 1L;
 
@@ -119,7 +119,7 @@ public class GenerateTreeGui extends AbstractConfigGui
             JMeterTreeNode myTarget) {
         myTarget = addSimpleController(treeModel, myTarget, title);
         JPopupMenu jp = MenuFactory.makeMenu(menuKey, "").getPopupMenu();
-        for(Component comp : jp.getComponents()) {
+        for (Component comp : jp.getComponents()) {
             JMenuItem jmi = (JMenuItem) comp;
             try {
                 TestElement testElement = guiPackage.createTestElement(jmi.getName());
@@ -156,26 +156,19 @@ public class GenerateTreeGui extends AbstractConfigGui
         return labelPanel;
     }
 
-
     /**
      * Initialize the components and layout of this component.
      */
     private void init() {
-        JPanel p = this;
+        setLayout(new BorderLayout(0, 5));
+        setBorder(makeBorder());
+        add(makeTitlePanel(), BorderLayout.NORTH);
 
-            setLayout(new BorderLayout(0, 5));
-            setBorder(makeBorder());
-            add(makeTitlePanel(), BorderLayout.NORTH);
-            p = new JPanel();
-
+        JPanel p = new JPanel();
         p.setLayout(new BorderLayout());
-
         p.add(makeLabelPanel(), BorderLayout.NORTH);
-//        p.add(makeMainPanel(), BorderLayout.CENTER);
         // Force a minimum table height of 70 pixels
         p.add(Box.createVerticalStrut(70), BorderLayout.WEST);
-        //p.add(makeButtonPanel(), BorderLayout.SOUTH);
-
         add(p, BorderLayout.CENTER);
     }
     /**
@@ -187,7 +180,7 @@ public class GenerateTreeGui extends AbstractConfigGui
      *            Node in the tree where we will add the Controller
      * @param name
      *            A name for the Controller
-     * @return the new node 
+     * @return the new node
      */
     private JMeterTreeNode addSimpleController(JMeterTreeModel model, JMeterTreeNode node, String name) {
         final TestElement sc = new GenericController();
@@ -208,14 +201,14 @@ public class GenerateTreeGui extends AbstractConfigGui
         }
 
         volatile JMeterTreeNode newNode;
-        
+
         @Override
         public void run() {
             try {
                 newNode = model.addComponent(testElement, node);
             } catch (IllegalUserActionException e) {
                  throw new Error(e);
-            }               
+            }
         }
     }
 
@@ -243,7 +236,7 @@ public class GenerateTreeGui extends AbstractConfigGui
      *
      * @param type
      *            class of the node to be found
-     * @param treeModel 
+     * @param treeModel the tree to search in
      *
      * @return the first node of the given type in the test component tree, or
      *         <code>null</code> if none was found.

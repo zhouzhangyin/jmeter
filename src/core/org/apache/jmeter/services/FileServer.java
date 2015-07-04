@@ -24,6 +24,7 @@ package org.apache.jmeter.services;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -34,7 +35,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.commons.collections.ArrayStack;
 import org.apache.jmeter.gui.JMeterFileFilter;
@@ -81,8 +82,6 @@ public class FileServer {
     private final Map<String, FileEntry> files = new HashMap<String, FileEntry>();
 
     private static final FileServer server = new FileServer();
-
-    private final Random random = new Random();
 
     // volatile needed to ensure safe publication
     private volatile String scriptName;
@@ -266,9 +265,7 @@ public class FileServer {
         }
         FileEntry fileEntry = files.get(alias);
         if (fileEntry == null) {
-            File f = new File(filename);
-            fileEntry =
-                new FileEntry(f.isAbsolute() ? f : new File(base, filename),null,charsetName);
+            fileEntry = new FileEntry(resolveFileFromPath(filename), null, charsetName);
             if (filename.equals(alias)){
                 log.info("Stored: "+filename);
             } else {
@@ -279,14 +276,37 @@ public class FileServer {
                 try {
                     fileEntry.headerLine=readLine(alias, false);
                 } catch (IOException e) {
+                    fileEntry.exception = e;
                     throw new IllegalArgumentException("Could not read file header line",e);
                 }
+                if (fileEntry.headerLine == null) {
+                    fileEntry.exception = new EOFException("File is empty: " + fileEntry.file);                    
+                }
             }
+        }
+        if (hasHeader && fileEntry.headerLine == null) {
+            throw new IllegalArgumentException("Could not read file header line", fileEntry.exception);            
         }
         return fileEntry.headerLine;
     }
 
-   /**
+    /**
+     * Resolves file name into {@link File} instance.
+     * When filename is not absolute and not found from current workind dir,
+     * it tries to find it under current base directory
+     * @param filename original file name
+     * @return {@link File} instance
+     */
+    private File resolveFileFromPath(String filename) {
+        File f = new File(filename);
+        if (f.isAbsolute() || f.exists()) {
+            return f;
+        } else {
+            return new File(base, filename);
+        }
+    }
+
+    /**
      * Get the next line of the named file, recycle by default.
      *
      * @param filename the filename or alias that was used to reserve the file
@@ -492,14 +512,26 @@ public class FileServer {
             if (src.isDirectory() && src.list() != null) {
                 File[] lfiles = src.listFiles(new JMeterFileFilter(extensions));
                 int count = lfiles.length;
-                input = lfiles[random.nextInt(count)];
+                input = lfiles[ThreadLocalRandom.current().nextInt(count)];
             }
         }
         return input;
     }
 
+    /**
+     * Get {@link File} instance for provided file path,
+     * resolve file location relative to base dir or script dir when needed
+     * @param path original path to file, maybe relative
+     * @return {@link File} instance 
+     */
+    public File getResolvedFile(String path) {
+        reserveFile(path);
+        return files.get(path).file;
+    }
+
     private static class FileEntry{
         private String headerLine;
+        private Throwable exception;
         private final File file;
         private Closeable inputOutputObject; 
         private final String charSetEncoding;

@@ -46,8 +46,7 @@ import org.apache.jmeter.util.JMeterUtils;
  * HTTP Sampler GUI
  *
  */
-public class HttpTestSampleGui extends AbstractSamplerGui 
-    implements ItemListener {
+public class HttpTestSampleGui extends AbstractSamplerGui {
     private static final long serialVersionUID = 240L;
     
     private static final Font FONT_VERY_SMALL = new Font("SansSerif", Font.PLAIN, 9);
@@ -72,7 +71,7 @@ public class HttpTestSampleGui extends AbstractSamplerGui
 
     private JTextField sourceIpAddr; // does not apply to Java implementation
     
-    private JComboBox sourceIpType = new JComboBox(HTTPSamplerBase.getSourceTypeList());
+    private JComboBox<String> sourceIpType = new JComboBox<>(HTTPSamplerBase.getSourceTypeList());
 
     private final boolean isAJP;
     
@@ -294,14 +293,4 @@ public class HttpTestSampleGui extends AbstractSamplerGui
             embeddedRE.setEnabled(false);
         }
     }
-
-    @Override
-    public void itemStateChanged(ItemEvent event) {
-        if (event.getStateChange() == ItemEvent.SELECTED) {
-            enableConcurrentDwn(true);
-        } else {
-            enableConcurrentDwn(false);
-        }
-    }
-
 }

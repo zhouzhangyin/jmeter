@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
@@ -238,7 +239,9 @@ public abstract class HTTPSamplerBase extends AbstractSampler
         HTTPConstants.COPY,
         HTTPConstants.MOVE,
         HTTPConstants.LOCK,
-        HTTPConstants.UNLOCK
+        HTTPConstants.UNLOCK,
+        HTTPConstants.REPORT,
+        HTTPConstants.MKCALENDAR
         };
 
     private static final List<String> METHODLIST = Collections.unmodifiableList(Arrays.asList(METHODS));
@@ -898,7 +901,7 @@ public abstract class HTTPSamplerBase extends AbstractSampler
      * @return the modified sampling result containing details of the Exception.
      */
     protected HTTPSampleResult errorResult(Throwable e, HTTPSampleResult res) {
-        res.setSampleLabel("Error: " + res.getSampleLabel());
+        res.setSampleLabel(res.getSampleLabel());
         res.setDataType(SampleResult.TEXT);
         ByteArrayOutputStream text = new ByteArrayOutputStream(200);
         e.printStackTrace(new PrintStream(text));
@@ -1142,7 +1145,9 @@ public abstract class HTTPSamplerBase extends AbstractSampler
         SampleResult res = null;
         try {
             res = sample(getUrl(), getMethod(), false, 0);
-            res.setSampleLabel(getName());
+            if(res != null) {
+                res.setSampleLabel(getName());
+            }
             return res;
         } catch (Exception e) {
             return errorResult(e, new HTTPSampleResult());
@@ -1166,7 +1171,7 @@ public abstract class HTTPSamplerBase extends AbstractSampler
      * @param depth
      *            Depth of this target in the frame structure. Used only to
      *            prevent infinite recursion.
-     * @return results of the sampling
+     * @return results of the sampling, can be null if u is in CacheManager
      */
     protected abstract HTTPSampleResult sample(URL u,
             String method, boolean areFollowingRedirect, int depth);
@@ -1279,6 +1284,7 @@ public abstract class HTTPSamplerBase extends AbstractSampler
                     log.warn("Concurrent download resources selected, "// $NON-NLS-1$
                             + "but pool size value is bad. Use default value");// $NON-NLS-1$
                 }
+                final String parentThreadName = Thread.currentThread().getName();
                 // Thread pool Executor to get resources 
                 // use a LinkedBlockingQueue, note: max pool size doesn't effect
                 final ThreadPoolExecutor exec = new ThreadPoolExecutor(
@@ -1297,6 +1303,8 @@ public abstract class HTTPSamplerBase extends AbstractSampler
                                         }
                                     }
                                 });
+                                t.setName(parentThreadName+"-ResDownload-" + t.getName()); //$NON-NLS-1$
+                                t.setDaemon(true);
                                 return t;
                             }
                         });
@@ -1379,6 +1387,9 @@ public abstract class HTTPSamplerBase extends AbstractSampler
     private void setParentSampleSuccess(HTTPSampleResult res, boolean initialValue) {
         if(!IGNORE_FAILED_EMBEDDED_RESOURCES) {
             res.setSuccessful(initialValue);
+            if(!initialValue) {
+                res.setResponseMessage("Embedded resource download error"); //$NON-NLS-1$
+            }
         }
     }
 
@@ -1483,7 +1494,13 @@ public abstract class HTTPSamplerBase extends AbstractSampler
                 if (log.isDebugEnabled()) {
                     log.debug("Location as URL: " + url.toString());
                 }
-                lastRes = sample(url, method, true, frameDepth);
+                HTTPSampleResult tempRes = sample(url, method, true, frameDepth);
+                if(tempRes != null) {
+                    lastRes = tempRes;
+                } else {
+                    // Last url was in cache so tempRes is null
+                    break;
+                }
             } catch (MalformedURLException e) {
                 errorResult(e, lastRes);
                 // The redirect URL we got was not a valid URL
@@ -1573,7 +1590,7 @@ public abstract class HTTPSamplerBase extends AbstractSampler
                 // downloaded for the sample made for the redirected url
                 // otherwise, use null so the container is created if necessary unless
                 // the flag is false, in which case revert to broken 2.1 behaviour 
-                // Bug 51939 -  https://issues.apache.org/bugzilla/show_bug.cgi?id=51939
+                // Bug 51939 -  https://bz.apache.org/bugzilla/show_bug.cgi?id=51939
                 if(!wasRedirected) {
                     HTTPSampleResult container = (HTTPSampleResult) (
                             areFollowingRedirect ? res.getParent() : SEPARATE_CONTAINER ? null : res);

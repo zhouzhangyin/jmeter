@@ -75,7 +75,8 @@ public class LogFilter implements Filter, Serializable {
 
     private static final Logger log = LoggingManager.getLoggerForClass();
 
-    /** protected members used by class to filter * */
+    // protected members used by class to filter
+
     protected boolean CHANGEEXT = false;
 
     protected String OLDEXT = null;
@@ -221,20 +222,13 @@ public class LogFilter implements Filter, Serializable {
      */
     @Override
     public boolean isFiltered(String path,TestElement el) {
-        // we do a quick check to see if any
-        // filters are set. If not we just
-        // return false to be efficient.
-        if (this.FILEFILTER || this.PTRNFILTER || this.CHANGEEXT) {
-            if (this.FILEFILTER) {
-                return filterFile(path);
-            } else if (this.PTRNFILTER) {
-                return filterPattern(path);
-            } else {
-                return false;
-            }
-        } else {
-            return false;
+        if (this.FILEFILTER) {
+            return filterFile(path);
         }
+        if (this.PTRNFILTER) {
+            return filterPattern(path);
+        }
+        return false;
     }
 
     /**

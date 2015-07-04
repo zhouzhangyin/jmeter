@@ -117,6 +117,7 @@ import org.apache.jmeter.protocol.http.util.HTTPFileArg;
 import org.apache.jmeter.protocol.http.util.SlowHC4SSLSocketFactory;
 import org.apache.jmeter.protocol.http.util.SlowHC4SocketFactory;
 import org.apache.jmeter.samplers.SampleResult;
+import org.apache.jmeter.services.FileServer;
 import org.apache.jmeter.testelement.property.CollectionProperty;
 import org.apache.jmeter.testelement.property.PropertyIterator;
 import org.apache.jmeter.util.JMeterUtils;
@@ -145,7 +146,7 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
         @Override
         public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
             long duration = super.getKeepAliveDuration(response, context);
-            if (duration <= 0) {// none found by the superclass
+            if (duration <= 0 && IDLE_TIMEOUT > 0) {// none found by the superclass
                 log.debug("Setting keepalive to " + IDLE_TIMEOUT);
                 return IDLE_TIMEOUT;
             }
@@ -158,7 +159,7 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
      * Special interceptor made to keep metrics when connection is released for some method like HEAD
      * Otherwise calling directly ((HttpConnection) localContext.getAttribute(ExecutionContext.HTTP_CONNECTION)).getMetrics();
      * would throw org.apache.http.impl.conn.ConnectionShutdownException
-     * See https://issues.apache.org/jira/browse/HTTPCLIENT-1081
+     * See https://bz.apache.org/jira/browse/HTTPCLIENT-1081
      */
     private static final HttpResponseInterceptor METRICS_SAVER = new HttpResponseInterceptor(){
         @Override
@@ -279,7 +280,7 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
 
         HTTPSampleResult res = createSampleResult(url, method);
 
-        HttpClient httpClient = setupClient(url);
+        HttpClient httpClient = setupClient(url, res);
 
         HttpRequestBase httpRequest = null;
         try {
@@ -411,15 +412,22 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
             res = resultProcessing(areFollowingRedirect, frameDepth, res);
 
         } catch (IOException e) {
-            res.sampleEnd();
             log.debug("IOException", e);
+            if (res.getEndTime() == 0) {
+                res.sampleEnd();
+            }
            // pick up headers if failed to execute the request
+            if (res.getRequestHeaders() != null) {
+                log.debug("Overwriting request old headers: " + res.getRequestHeaders());
+            }
             res.setRequestHeaders(getConnectionHeaders((HttpRequest) localContext.getAttribute(ExecutionContext.HTTP_REQUEST)));
             errorResult(e, res);
             return res;
         } catch (RuntimeException e) {
-            res.sampleEnd();
             log.debug("RuntimeException", e);
+            if (res.getEndTime() == 0) {
+                res.sampleEnd();
+            }
             errorResult(e, res);
             return res;
         } finally {
@@ -617,7 +625,7 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
         }
     }
 
-    private HttpClient setupClient(URL url) {
+    private HttpClient setupClient(URL url, SampleResult res) {
 
         Map<HttpClientKey, HttpClient> mapHttpClientPerHttpClientKey = HTTPCLIENTS_CACHE_PER_THREAD_AND_HTTPCLIENTKEY.get();
         
@@ -715,6 +723,9 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
                 log.debug("Reusing the HttpClient: @"+System.identityHashCode(httpClient) + " " + key.toString());
             }
         }
+
+        MeasuringConnectionManager connectionManager = (MeasuringConnectionManager) httpClient.getConnectionManager();
+        connectionManager.setSample(res);
 
         // TODO - should this be done when the client is created?
         // If so, then the details need to be added as part of HttpClientKey
@@ -1016,7 +1027,9 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
             ViewableFileBody[] fileBodies = new ViewableFileBody[files.length];
             for (int i=0; i < files.length; i++) {
                 HTTPFileArg file = files[i];
-                fileBodies[i] = new ViewableFileBody(new File(file.getPath()), file.getMimeType());
+                
+                File reservedFile = FileServer.getFileServer().getResolvedFile(file.getPath());
+                fileBodies[i] = new ViewableFileBody(reservedFile, file.getMimeType());
                 multiPart.addPart(file.getParamName(),fileBodies[i]);
             }
 
@@ -1219,7 +1232,8 @@ public class HTTPHC4Impl extends HTTPHCAbstractImpl {
             hasEntityBody = true;
 
             // If getSendFileAsPostBody returned true, it's sure that file is not null
-            FileEntity fileRequestEntity = new FileEntity(new File(files[0].getPath())); // no need for content-type here
+            File reservedFile = FileServer.getFileServer().getResolvedFile(files[0].getPath());
+            FileEntity fileRequestEntity = new FileEntity(reservedFile); // no need for content-type here
             entity.setEntity(fileRequestEntity);
         }
         // If none of the arguments have a name specified, we

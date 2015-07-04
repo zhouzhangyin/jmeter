@@ -19,6 +19,7 @@
 package org.apache.jmeter.save;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -182,7 +183,7 @@ public class SaveService {
     private static String fileVersion = ""; // read from saveservice.properties file// $NON-NLS-1$
     // Must match Revision id value in saveservice.properties, 
     // used to ensure saveservice.properties and SaveService are updated simultaneously
-    private static final String FILEVERSION = "1641081"; // Expected value $NON-NLS-1$
+    private static final String FILEVERSION = "1656252"; // Expected value $NON-NLS-1$
     private static String fileEncoding = ""; // read from properties file// $NON-NLS-1$
 
     static {
@@ -252,19 +253,8 @@ public class SaveService {
                                 registerConverter(key, JMXSAVER, false);
                                 registerConverter(key, JTLSAVER, false);
                             }
-                        } catch (IllegalAccessException e1) {
-                            log.warn("Can't register a converter: " + key, e1);
-                        } catch (InstantiationException e1) {
-                            log.warn("Can't register a converter: " + key, e1);
-                        } catch (ClassNotFoundException e1) {
-                            log.warn("Can't register a converter: " + key, e1);
-                        } catch (IllegalArgumentException e1) {
-                            log.warn("Can't register a converter: " + key, e1);
-                        } catch (SecurityException e1) {
-                            log.warn("Can't register a converter: " + key, e1);
-                        } catch (InvocationTargetException e1) {
-                            log.warn("Can't register a converter: " + key, e1);
-                        } catch (NoSuchMethodException e1) {
+                        } catch (IllegalAccessException | InstantiationException | ClassNotFoundException | IllegalArgumentException|
+                                SecurityException | InvocationTargetException | NoSuchMethodException e1) {
                             log.warn("Can't register a converter: " + key, e1);
                         }
                     }
@@ -506,11 +496,47 @@ public class SaveService {
 
     /**
      * Load a Test tree (JMX file)
-     * @param reader on the JMX file
+     * @param reader the JMX file as an {@link InputStream}
+     * @return the loaded tree or null if an error occurs
+     * @throws IOException if there is a problem reading the file or processing it
+     * @deprecated use {@link SaveService}{@link #loadTree(File)}
+     */
+    public static HashTree loadTree(InputStream reader) throws IOException {
+        try {
+            return readTree(reader, null);
+        } catch(IllegalArgumentException e) {
+            log.error("Problem loading XML, message:"+e.getMessage(), e);
+            return null;
+        } finally {
+            JOrphanUtils.closeQuietly(reader);
+        }
+    }
+    
+    /**
+     * Load a Test tree (JMX file)
+     * @param file the JMX file
      * @return the loaded tree
      * @throws IOException if there is a problem reading the file or processing it
      */
-    public static HashTree loadTree(InputStream reader) throws IOException {
+    public static HashTree loadTree(File file) throws IOException {
+        log.info("Loading file: " + file);
+        InputStream reader = null;
+        try {
+            reader = new FileInputStream(file);
+            return readTree(reader, file);
+        } finally {
+            JOrphanUtils.closeQuietly(reader);
+        }
+    }
+
+    /**
+     * 
+     * @param reader {@link InputStream} 
+     * @param file the JMX file used only for debug, can be null
+     * @return the loaded tree
+     * @throws IOException if there is a problem reading the file or processing it
+     */
+    private static final HashTree readTree(InputStream reader, File file) throws IOException {
         if (!reader.markSupported()) {
             reader = new BufferedInputStream(reader);
         }
@@ -532,17 +558,20 @@ public class SaveService {
                 reader.reset();
                 return OldSaveService.loadSubTree(reader);                
             }
-            log.warn("Problem loading XML, cannot determine class for element: " + e.getLocalizedMessage());
-            return null;
-        } catch (NoClassDefFoundError e) {
-            log.error("Missing class "+e);
-            return null;
-        } catch (ConversionException e) {
-            log.error("Conversion error "+e);
-            return null;
+            if(file != null) {
+                throw new IllegalArgumentException("Problem loading XML from:'"+file.getAbsolutePath()+"', cannot determine class for element: " + e, e);
+            } else {
+                throw new IllegalArgumentException("Problem loading XML, cannot determine class for element: " + e, e);
+            }
+        } catch (ConversionException | NoClassDefFoundError e) {
+            if(file != null) {
+                throw new IllegalArgumentException("Problem loading XML from:'"+file.getAbsolutePath()+"', missing class "+e , e);
+            } else {
+                throw new IllegalArgumentException("Problem loading XML, missing class "+e , e);
+            }
         }
-    }
 
+    }
     private static InputStreamReader getInputStreamReader(InputStream inStream) {
         // Check if we have a encoding to use from properties
         Charset charset = getFileEncodingCharset();

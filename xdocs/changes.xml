@@ -33,9 +33,9 @@ Earlier changes are detailed in the <a href="changes_history.html">History of Pr
 </note>
 
 
-<!--  =================== 2.13 =================== -->
+<!--  =================== 2.14 =================== -->
 
-<h1>Version 2.13</h1>
+<h1>Version 2.14</h1>
 
 Summary
 <ul>
@@ -55,7 +55,6 @@ Summary
 <!-- <ch_title>Sample title</ch_title>
 <p>
 <ul>
-<li><bugzilla>48799</bugzilla> - Add time to establish connection to available sample metrics. Implemented by Andrey Pokhilko (andrey at blazemeter.com) and contributed by BlazeMeter Ltd.</li>
 <li>Sample text</li>
 </ul>
 </p>
@@ -65,9 +64,133 @@ Summary
 <figure width="691" height="215" image="changes/2.10/18_https_test_script_recorder.png"></figure>
  -->
 
-<!--  =================== Known bugs =================== -->
+<!-- =================== Incompatible changes =================== -->
 
+<ch_section>Incompatible changes</ch_section>
 
+<ul>
+    <li>In RandomTimer class, protected instance timer has been replaced by getTimer() protected method, this is related to <bugzilla>58100</bugzilla>. This may impact 3rd party plugins.</li>
+</ul>
+
+<!-- =================== Improvements =================== -->
+
+<ch_section>Improvements</ch_section>
+
+<h3>HTTP Samplers and Test Script Recorder</h3>
+<ul>
+    <li><bug>57696</bug>HTTP Request : Improve responseMessage when resource download fails. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>57995</bug>Use FileServer for HTTP Request files. Implemented by Andrey Pokhilko (andrey at blazemeter.com) and contributed by BlazeMeter Ltd.</li>
+</ul>
+
+<h3>Other samplers</h3>
+<ul>
+    <li><bug>57928</bug>Add ability to define protocol (http/https) to AccessLogSampler GUI. Contributed by Jérémie Lesage (jeremie.lesage at jeci.fr)</li>
+</ul>
+
+<h3>Controllers</h3>
+<ul>
+</ul>
+
+<h3>Listeners</h3>
+<ul>
+<li><bug>58041</bug>Tree View Listener should show sample data type</li>
+</ul>
+
+<h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
+<ul>
+</ul>
+
+<h3>Functions</h3>
+<ul>
+</ul>
+
+<h3>I18N</h3>
+<ul>
+</ul>
+
+<h3>General</h3>
+<ul>
+<li><bug>57913</bug>Automated backups of last saved JMX files. Contributed by Benoit Vatan (benoit.vatan at gmail.com)</li>
+<li><bug>57988</bug>Shortcuts (Ctrl+1 .. Ctrl+9) to quick add elements into test plan. Implemented by Andrey Pokhilko (andrey at blazemeter.com) and contributed by BlazeMeter Ltd.</li>
+<li><bug>58100</bug>Performance enhancements : Replace Random by ThreadLocalRandom.</li>
+</ul>
+<ch_section>Non-functional changes</ch_section>
+<ul>
+<li>Updated to tika-core and tika-parsers 1.9 (from 1.7)</li>
+<li>Updated to commons-math3 3.5 (from 3.4.1)</li>
+<li>Updated to commons-pool2 2.4.1 (from 2.3)</li>
+<li><bug>57981</bug>Require a minimum of Java 7.</li>
+</ul>
+ 
+ <!-- =================== Bug fixes =================== -->
+
+<ch_section>Bug fixes</ch_section>
+
+<h3>HTTP Samplers and Test Script Recorder</h3>
+<ul>
+    <li><bug>57806</bug>"audio/x-mpegurl" mime type is erroneously considered as binary by ViewResultsTree. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
+    <li><bug>57858</bug>Don't call sampleEnd twice in HTTPHC4Impl when a RuntimeException or an IOException occurs in the sample method.</li>
+    <li><bug>57921</bug>HTTP/1.1 without keep-alive "Connection" response header no longer uses infinite keep-alive.</li>
+    <li><bug>57956</bug>The hc.parameters reference in jmeter.properties doesn't work when JMeter is not started in bin.</li>
+</ul>
+
+<h3>Other Samplers</h3>
+<ul>
+    <li><bug>58013</bug>Enable all protocols that are enabled on the default SSLContext for usage with the SMTP Sampler.</li>
+</ul>
+
+<h3>Controllers</h3>
+<ul>
+</ul>
+
+<h3>Listeners</h3>
+<ul>
+<li><bug>58033</bug> SampleResultConverter should note that it cannot record non-TEXT data</li>
+</ul>
+
+<h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
+<ul>
+</ul>
+
+<h3>Functions</h3>
+<ul>
+<li><bug>57825</bug>__Random function fails if min value is equal to max value (regression related to <bugzilla>54453</bugzilla>)</li>
+</ul>
+
+<h3>I18N</h3>
+<ul>
+</ul>
+
+<h3>General</h3>
+<ul>
+    <li><bug>54826</bug>Don't fail on long strings in JSON responses when displaying them as JSON in View Results Tree.</li>
+    <li><bug>57734</bug>Maven transient dependencies are incorrect for 2.13</li>
+    <li><bug>57821</bug>Command-line option "-X --remoteexit" doesn't work since 2.13 (regression related to <bugzilla>57500</bugzilla>)</li>
+    <li><bug>57731</bug>TESTSTART.MS has always the value of the first Test started in Server mode in NON GUI Distributed testing</li>
+    <li><bug>58016</bug> Error type casting using external SSL Provider. Contributed by Kirill Yankov (myworkpostbox at gmail.com)</li>
+</ul>
+
+ <!--  =================== Thanks =================== -->
+
+<ch_section>Thanks</ch_section>
+<p>We thank all contributors mentioned in bug and improvement sections above:
+<ul>
+<li><a href="http://ubikloadpack.com">Ubik Load Pack</a></li>
+<li>Benoit Vatan (benoit.vatan at gmail.com)</li>
+<li>Jérémie Lesage (jeremie.lesage at jeci.fr)</li>
+<li>Kirill Yankov (myworkpostbox at gmail.com)</li>
+</ul>
+
+<br/>
+We also thank bug reporters who helped us improve JMeter. <br/>
+For this release we want to give special thanks to the following reporters for the clear reports and tests made after our fixes:
+<ul>
+</ul>
+
+Apologies if we have omitted anyone else.
+ </p>
+ <!--  =================== Known bugs =================== -->
+ 
 <ch_section>Known bugs</ch_section>
 
 <ul>
@@ -101,14 +224,8 @@ The fix is to run JMeter as Administrator, it will create the registry key for y
 </li>
 
 <li>
-With Java 1.6 and Gnome 3 on Linux systems, the JMeter menu may not work correctly (shift between mouse's click and the menu). 
-This is a known Java bug (see  <bugzilla>54477</bugzilla>). 
-A workaround is to use a Java 7 runtime (OpenJDK or Oracle JDK).
-</li>
-
-<li>
 With Oracle Java 7 and Mac Book Pro Retina Display, the JMeter GUI may look blurry. 
-This is a known Java bug, see Bug <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=8000629" >JDK-8000629</a>.
+This is a known Java bug, see Bug <a href="http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8000629" >JDK-8000629</a>.
 A workaround is to use a Java 7 update 40 runtime which fixes this issue.
 </li>
 
@@ -126,134 +243,20 @@ This property is in this file:
 See  <bugzilla>56357</bugzilla> for details.
 </li>
 
+<li>
+Under Mac OSX Aggregate Graph will show wrong values due to mirroring effect on numbers.
+This is due to a known Java bug, see Bug <a href="https://bugs.openjdk.java.net/browse/JDK-8065373" >JDK-8065373</a> 
+The fix is to use JDK7_u79, JDK8_u45 or later.
+</li>
+
+<li>
+View Results Tree may fail to display some HTML code under HTML renderer, see <bugzilla>54586</bugzilla>.
+This is due to a known Java bug which fails to parse "px" units in row/col attributes.
+See Bug <a href="https://bugs.openjdk.java.net/browse/JDK-8031109" >JDK-8031109</a> 
+The fix is to use JDK9 b65 or later.
+</li>
 </ul>
-
-<!-- =================== Incompatible changes =================== -->
-
-<ch_section>Incompatible changes</ch_section>
-
-<ul>
-</ul>
-
-<!-- =================== Bug fixes =================== -->
-
-<ch_section>Bug fixes</ch_section>
-
-<h3>HTTP Samplers and Test Script Recorder</h3>
-<ul>
-<li><bug>57385</bug>Getting empty thread name in xml result for HTTP requests with "Follow Redirects" set. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
-</ul>
-
-<h3>Other Samplers</h3>
-<ul>
-</ul>
-
-<h3>Controllers</h3>
-<ul>
-<li><bug>57447</bug>Use only the user listed DNS Servers, when "use custom DNS resolver" option is enabled.
-</ul>
-
-<h3>Listeners</h3>
-<ul>
-<li><bug>57262</bug>Aggregate Report, Aggregate Graph and Summary Report export : headers use keys instead of labels</li>
-<li><bug>57346</bug>Summariser : The + (difference) reports show wrong elapsed time and throughput</li>
-<li><bug>57449</bug>Distributed Testing: Stripped modes do not strip responses from SubResults (affects load tests that use Download of embedded resources). Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
-</ul>
-
-<h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
-<ul>
-</ul>
-
-<h3>Functions</h3>
-<ul>
-</ul>
-
-<h3>I18N</h3>
-<ul>
-</ul>
-
-<h3>General</h3>
-<ul>
-<li><bug>57365</bug>Selected LAF is not correctly setup due to call of UIManager.setLookAndFeel too late. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
-<li><bug>57364</bug>Options &lt; Look And Feel does not update all windows LAF. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
-<li><bug>57394</bug>When constructing an instance with ClassTools#construct(String, int) the integer was ignored and the default constructor was used instead.</li>
-<li><bug>57440</bug>OutOfMemoryError after introduction of JSyntaxTextArea in LoggerPanel due to disableUndo not being taken into account.</li>
-</ul>
-
-<!-- =================== Improvements =================== -->
-
-<ch_section>Improvements</ch_section>
-
-<h3>HTTP Samplers and Test Script Recorder</h3>
-<ul>
-<li><bug>25430</bug>HTTP(S) Test Script Recorder : Make it populate HTTP Authorisation Manager. Partly based on a patch from Dzmitry Kashlach (dzmitrykashlach at gmail.com)</li>
-<li><bug>57381</bug>HTTP(S) Test Script Recorder should display an error if Target Controller references a Recording Controller and no Recording Controller exists. Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
-<li><bug>57488</bug>Performance : Improve SSLContext reset for Two-way SSL Authentication</li>
-</ul>
-
-<h3>Other samplers</h3>
-<ul>
-    <li><bug>57322</bug>JDBC Test elements: add ResultHandler to deal with ResultSets(cursors) returned by callable statements. Contributed by Yngvi &amp;THORN;&amp;oacute;r Sigurj&amp;oacute;nsson (blitzkopf at gmail.com)</li>
-</ul>
-
-<h3>Controllers</h3>
-<ul>
-</ul>
-
-<h3>Listeners</h3>
-<ul>
-<li><bug>55932</bug>Create a Async BackendListener to allow easy plug of new listener (Graphite, JDBC, Console,...)</li>
-<li><bug>57246</bug>BackendListener : Create a Graphite implementation</li>
-<li><bug>57217</bug>Aggregate graph and Aggregate report improvements (3 configurable percentiles, same data in both, factor out code). Contributed by Ubik Load Pack (support at ubikloadpack.com)</li>
-</ul>
-
-<h3>Timers, Assertions, Config, Pre- &amp; Post-Processors</h3>
-<ul>
-</ul>
-
-<h3>Functions</h3>
-<ul>
-<li><bug>54453</bug>Performance enhancements : Replace Random by ThreadLocalRandom in __Random function</li>
-</ul>
-
-<h3>I18N</h3>
-<ul>
-</ul>
-
-<h3>General</h3>
-<ul>
-</ul>
-<ch_section>Non-functional changes</ch_section>
-<ul>
-<li>Updated to jsoup-1.8.3.jar (from 1.7.3)</li>
-<li>Updated to tika-core and tika-parsers 1.7 (from 1.6)</li>
-<li><bug>57276</bug>RMIC no longer needed since Java 5</li>
-<li><bug>57310</bug>Replace System.getProperty("file.separator") with File.separator throughout (Also "path.separator" with File.pathSeparator)</li>
-<li><bug>57389</bug>Fix potential NPE in converters</li>
-<li><bug>57417</bug>Remove unused method isTemporary from NullProperty. This was a leftover from a refactoring done in 2003.</li>
-<li><bug>57418</bug>Remove unused constructor from Workbench</li>
-<li><bug>57419</bug>Remove unused interface ModelListener.</li>
-<li><bug>57466</bug>IncludeController : Remove an unneeded set creation. Contributed by Benoit Wiart (benoit.wiart at gmail.com)</li>
-</ul>
-
-<ch_section>Thanks</ch_section>
-<p>We thank all contributors mentioned in bug and improvement sections above:
-<ul>
-<li><a href="http://ubikloadpack.com">Ubik Load Pack</a></li>
-<li>Yngvi &amp;THORN;&amp;oacute;r Sigurj&amp;oacute;nsson (blitzkopf at gmail.com)</li>
-<li>Dzmitry Kashlach (dzmitrykashlach at gmail.com)</li>
-<li>Benoit Wiart (benoit.wiart at gmail.com)</li>
-</ul>
-
-<br/>
-We also thank bug reporters who helped us improve JMeter. <br/>
-For this release we want to give special thanks to the following reporters for the clear reports and tests made after our fixes:
-<ul>
-<li>Chaitanya Bhatt (bhatt.chaitanya@gmail.com) for his thorough testing of new BackendListener and Graphite Client implementation.</li>
-</ul>
-
-Apologies if we have omitted anyone else.
- </p>
+ 
 </section> 
 </body> 
 </document>

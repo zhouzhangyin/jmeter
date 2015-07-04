@@ -15,15 +15,17 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-
+<!DOCTYPE document [
+  <!ENTITY trade "&#x02122;">
+]>
 <document>
   <properties>
-     <title>Apache JMeter&amp;trade;</title>
+     <title>Apache JMeter&trade;</title>
   </properties>
   <body>
-    <section name="Apache JMeter&amp;trade;">
+    <section name="Apache JMeter&trade;">
     <p>
-      The <b>Apache JMeter&amp;trade;</b> desktop application is open source software,
+      The <b>Apache JMeter&trade;</b> application is open source software,
       a 100% pure Java application designed
       to load test functional behavior and measure performance.  It was
       originally designed for testing Web Applications but has
@@ -32,7 +34,7 @@
     <h2>What can I do with it?</h2>
     <p>
       Apache JMeter may be used to test performance both on static and dynamic
-      resources (Files, Web dynamic languages - PHP, Java, ASP.NET, etc. -, Java Objects, Data Bases and
+      resources (Webservices (SOAP/REST), Web dynamic languages - PHP, Java, ASP.NET, Files, etc. -, Java Objects, Data Bases and
       Queries, FTP Servers and more). It can be used to simulate a heavy
 load on a server, group of servers, network or object to test its strength or to analyze
 overall performance under different load types. You can use it to make a
@@ -45,7 +47,7 @@ behavior under heavy concurrent load.
     <li>Ability to load and performance test many different server/protocol types:
         <ul>
         <li>Web - HTTP, HTTPS</li>
-        <li>SOAP</li>
+        <li>SOAP / REST</li>
         <li>FTP</li>
         <li>Database via JDBC</li>
         <li>LDAP</li>
@@ -64,7 +66,7 @@ behavior under heavy concurrent load.
     <li><b>Highly Extensible core:</b>
       <ul>
         <li>Pluggable Samplers allow unlimited testing capabilities.</li>
-        <li>Several load statistics may be choosen with <b>pluggable timers</b>.</li>
+        <li>Several load statistics may be chosen with <b>pluggable timers</b>.</li>
         <li>Data analysis and <b>visualization plugins</b> allow great extensibility
         as well as personalization.</li>
         <li>Functions can be used to provide dynamic input to a test or provide data manipulation.</li>
@@ -79,7 +81,7 @@ As far as web-services and remote services are concerned, JMeter looks like a br
 however JMeter does not perform all the actions supported by browsers.
 In particular, JMeter does not execute the Javascript found in HTML pages.
 Nor does it render the HTML pages as a browser does 
-(it's possible to view the response as HTML etc, but the timings are not included in any samples, and only one sample in one thread is ever viewed at a time).
+(it's possible to view the response as HTML etc., but the timings are not included in any samples, and only one sample in one thread is ever viewed at a time).
 </p>
 
 <h2>How do I do it?</h2>

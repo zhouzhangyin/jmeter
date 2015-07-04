@@ -21,13 +21,13 @@ package org.apache.jmeter.functions;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.jmeter.engine.util.CompoundVariable;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.threads.JMeterVariables;
 import org.apache.jmeter.util.JMeterUtils;
-import org.apache.jmeter.util.ThreadLocalRandom;
 
 /**
  * Provides a Random function which returns a random long integer between a min
@@ -62,7 +62,7 @@ public class Random extends AbstractFunction {
         long min = Long.parseLong(minimum.execute().trim());
         long max = Long.parseLong(maximum.execute().trim());
 
-        long rand = ThreadLocalRandom.current().nextLong(min, max);
+        long rand = ThreadLocalRandom.current().nextLong(min, max+1);
 
         String randString = Long.toString(rand);
 

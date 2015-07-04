@@ -235,7 +235,7 @@ public class ProxyControl extends GenericController {
         } else {
             if (!KeyToolUtils.haveKeytool()) {
                 KEYSTORE_MODE = KeystoreMode.NONE;
-            } else if (KeyToolUtils.SUPPORTS_HOST_CERT && USE_DYNAMIC_KEYS) {
+            } else if (USE_DYNAMIC_KEYS) {
                 KEYSTORE_MODE = KeystoreMode.DYNAMIC_KEYSTORE;
                 log.info("HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file " + CERT_PATH_ABS);
             } else {
@@ -1488,7 +1488,9 @@ public class ProxyControl extends GenericController {
             keyPassword = storePassword; // we use same password for both
             setPassword(storePassword);
             log.info("Generating standard keypair in " + CERT_PATH_ABS);
-            CERT_PATH.delete(); // safer to start afresh
+            if(!CERT_PATH.delete()){ // safer to start afresh
+                log.warn("Could not delete "+CERT_PATH.getAbsolutePath()+", this could create issues, stop jmeter, ensure file is deleted and restart again");
+            }
             KeyToolUtils.genkeypair(CERT_PATH, JMETER_SERVER_ALIAS, storePassword, CERT_VALIDITY, null, null);
             keyStore = getKeyStore(storePassword.toCharArray()); // This should now work
         }

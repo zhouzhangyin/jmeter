@@ -22,7 +22,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -171,10 +170,12 @@ public class SampleResultConverter extends AbstractCollectionConverter {
             try {
                 if (SampleResult.TEXT.equals(res.getDataType())){
                     writer.setValue(new String(res.getResponseData(), res.getDataEncodingWithDefault()));
+                } else {
+                    writer.setValue("Non-TEXT response data, cannot record: (" + res.getDataType() + ")");                    
                 }
                 // Otherwise don't save anything - no point
             } catch (UnsupportedEncodingException e) {
-                writer.setValue("Unsupported encoding in response data, can't record.");
+                writer.setValue("Unsupported encoding in response data, cannot record: " + e);
             }
             writer.endNode();
         }
@@ -467,8 +468,6 @@ public class SampleResultConverter extends AbstractCollectionConverter {
             }
             outstream.close();
             res.setResponseData(outstream.toByteArray());
-        } catch (FileNotFoundException e) {
-            log.warn(e.getLocalizedMessage());
         } catch (IOException e) {
             log.warn(e.getLocalizedMessage());
         } finally {

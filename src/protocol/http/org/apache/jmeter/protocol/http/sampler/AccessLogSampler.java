@@ -18,7 +18,9 @@
 
 package org.apache.jmeter.protocol.http.sampler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jmeter.protocol.http.control.CookieManager;
+import org.apache.jmeter.protocol.http.util.HTTPConstants;
 import org.apache.jmeter.protocol.http.util.accesslog.Filter;
 import org.apache.jmeter.protocol.http.util.accesslog.LogParser;
 import org.apache.jmeter.samplers.Entry;
@@ -52,7 +54,7 @@ import org.apache.log.Logger;
  * this sampler, so that I can take production logs to simulate production
  * traffic in a test environment. Doing so is desirable to study odd or unusual
  * behavior. It's also good to compare a new system against an existing system
- * to get near apples- to-apples comparison. I've been asked if benchmarks are
+ * to get near apples-to-apples comparison. I've been asked if benchmarks are
  * really fair comparisons just about every single time, so this helps me
  * accomplish that task.
  * <p>
@@ -70,8 +72,8 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
 
     public static final String DEFAULT_CLASS = "org.apache.jmeter.protocol.http.util.accesslog.TCLogParser"; // $NON-NLS-1$
 
-    /** private members used by class * */
-    private transient LogParser PARSER = null;
+    /* private members used by class */
+    private transient LogParser parser = null;
 
     // NOTUSED private Class PARSERCLASS = null;
     private String logFile, parserClassName, filterClassName;
@@ -133,7 +135,7 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
         SampleResult res = null;
         try {
 
-            if (PARSER == null) {
+            if (parser == null) {
                 throw new JMeterException("No Parser available");
             }
             /*
@@ -146,7 +148,7 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
             // person could use it that way if they have a
             // huge gigabyte log file and they only want to
             // use a quarter of the entries.
-            int thisCount = PARSER.parseAndConfigure(1, this);
+            int thisCount = parser.parseAndConfigure(1, this);
             if (thisCount < 0) // Was there an error?
             {
                 return errorResult(new Error("Problem parsing the log file"), new HTTPSampleResult());
@@ -168,7 +170,9 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
             }
             count = thisCount;
             res = sample();
-            res.setSampleLabel(toString());
+            if(res != null) {
+                res.setSampleLabel(toString());
+            }
         } catch (Exception e) {
             log.warn("Sampling failure", e);
             return errorResult(e, new HTTPSampleResult());
@@ -194,13 +198,13 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
      * parser and use different log parser.
      */
     public void instantiateParser() {
-        if (PARSER == null) {
+        if (parser == null) {
             try {
                 if (this.getParserClassName() != null && this.getParserClassName().length() > 0) {
                     if (this.getLogFile() != null && this.getLogFile().length() > 0) {
-                        PARSER = (LogParser) Class.forName(getParserClassName()).newInstance();
-                        PARSER.setSourceFile(this.getLogFile());
-                        PARSER.setFilter(filter);
+                        parser = (LogParser) Class.forName(getParserClassName()).newInstance();
+                        parser.setSourceFile(this.getLogFile());
+                        parser.setFilter(filter);
                     } else {
                         log.error("No log file specified");
                     }
@@ -276,6 +280,29 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
     public void setPortString(String port) {
         super.setProperty(HTTPSamplerBase.PORT, port);
     }
+    
+    /**
+     * Sets the scheme, with default
+     * @param value the protocol
+     */
+    @Override
+    public void setProtocol(String value) {
+        setProperty(PROTOCOL, value.toLowerCase(java.util.Locale.ENGLISH));
+    }
+    
+    /**
+     * Gets the protocol, with default.
+     *
+     * @return the protocol
+     */
+    @Override
+    public String getProtocol() {
+        String protocol = getPropertyAsString(PROTOCOL);
+        if (StringUtils.isEmpty(protocol)) {
+            return HTTPConstants.PROTOCOL_HTTP;
+        }
+        return protocol;
+    }
 
     /**
      *
@@ -308,13 +335,13 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
                         initFilter();
                         s.filter = (Filter) ((TestCloneable) filter).clone();
                     }
-                    if(TestCloneable.class.isAssignableFrom(Class.forName(parserClassName)))
+                    if (TestCloneable.class.isAssignableFrom(Class.forName(parserClassName)))
                     {
                         instantiateParser();
-                        s.PARSER = (LogParser)((TestCloneable)PARSER).clone();
-                        if(filter != null)
+                        s.parser = (LogParser)((TestCloneable)parser).clone();
+                        if (filter != null)
                         {
-                            s.PARSER.setFilter(s.filter);
+                            s.parser.setFilter(s.filter);
                         }
                     }
                 } catch (Exception e) {
@@ -330,8 +357,8 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
      */
     @Override
     public void testEnded() {
-        if (PARSER != null) {
-            PARSER.close();
+        if (parser != null) {
+            parser.close();
         }
         filter = null;
         started = false;
@@ -352,8 +379,8 @@ public class AccessLogSampler extends HTTPSampler implements TestBean,ThreadList
      */
     @Override
     public void threadFinished() {
-        if(PARSER instanceof ThreadListener) {
-            ((ThreadListener)PARSER).threadFinished();
+        if(parser instanceof ThreadListener) {
+            ((ThreadListener)parser).threadFinished();
         }
         if(filter instanceof ThreadListener) {
             ((ThreadListener)filter).threadFinished();

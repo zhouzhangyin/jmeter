@@ -38,9 +38,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Properties;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Vector;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -106,9 +106,6 @@ public class JMeterUtils implements UnitTestManager {
             return new Perl5Matcher();
         }
     };
-
-    // Provide Random numbers to whomever wants one
-    private static final Random rand = new Random();
 
     /**
      * Gets Perl5Matcher for this thread.
@@ -337,7 +334,7 @@ public class JMeterUtils implements UnitTestManager {
      * @return a random <code>int</code>
      */
     public static int getRandomInt(int r) {
-        return rand.nextInt(r);
+        return ThreadLocalRandom.current().nextInt(r);
     }
 
     /**
@@ -583,10 +580,7 @@ public class JMeterUtils implements UnitTestManager {
                 log.warn("no icon for " + name);
                 return null;                
             }
-        } catch (NoClassDefFoundError e) {// Can be returned by headless hosts
-            log.info("no icon for " + name + " " + e.getMessage());
-            return null;
-        } catch (InternalError e) {// Can be returned by headless hosts
+        } catch (NoClassDefFoundError | InternalError e) {// Can be returned by headless hosts
             log.info("no icon for " + name + " " + e.getMessage());
             return null;
         }
@@ -797,8 +791,7 @@ public class JMeterUtils implements UnitTestManager {
     public static int getPropDefault(String propName, int defaultVal) {
         int ans;
         try {
-            ans = (Integer.valueOf(appProperties.getProperty(propName, Integer.toString(defaultVal)).trim()))
-                    .intValue();
+            ans = Integer.parseInt(appProperties.getProperty(propName, Integer.toString(defaultVal)).trim());
         } catch (Exception e) {
             log.warn("Unexpected value set for int property:'"+propName+"', defaulting to:"+defaultVal);
             ans = defaultVal;
@@ -824,7 +817,7 @@ public class JMeterUtils implements UnitTestManager {
             } else if (strVal.equalsIgnoreCase("false") || strVal.equalsIgnoreCase("f")) { // $NON-NLS-1$  // $NON-NLS-2$
                 ans = false;
             } else {
-                ans = ((Integer.valueOf(strVal)).intValue() == 1);
+                ans = Integer.parseInt(strVal) == 1;
             }
         } catch (Exception e) {
             log.warn("Unexpected value set for boolean property:'"+propName+"', defaulting to:"+defaultVal);
@@ -845,7 +838,7 @@ public class JMeterUtils implements UnitTestManager {
     public static long getPropDefault(String propName, long defaultVal) {
         long ans;
         try {
-            ans = (Long.valueOf(appProperties.getProperty(propName, Long.toString(defaultVal)).trim())).longValue();
+            ans = Long.parseLong(appProperties.getProperty(propName, Long.toString(defaultVal)).trim());
         } catch (Exception e) {
             log.warn("Unexpected value set for long property:'"+propName+"', defaulting to:"+defaultVal);
             ans = defaultVal;
@@ -917,7 +910,7 @@ public class JMeterUtils implements UnitTestManager {
      * @param namVec List of names, which are displayed in <code>combo</code>
      * @param name Name, that is to be selected. It has to be in <code>namVec</code>
      */
-    public static void selJComboBoxItem(Properties properties, JComboBox combo, Vector<?> namVec, String name) {
+    public static void selJComboBoxItem(Properties properties, JComboBox<?> combo, Vector<?> namVec, String name) {
         int idx = namVec.indexOf(name);
         combo.setSelectedIndex(idx);
         // Redisplay.

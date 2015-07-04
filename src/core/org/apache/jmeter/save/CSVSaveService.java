@@ -363,11 +363,7 @@ public final class CSVSaveService {
                         + ". Extra fields have been ignored.");
             }
 
-        } catch (NumberFormatException e) {
-            log.warn("Error parsing field '" + field + "' at line "
-                    + lineNumber + " " + e);
-            throw new JMeterError(e);
-        } catch (ParseException e) {
+        } catch (NumberFormatException | ParseException e) {
             log.warn("Error parsing field '" + field + "' at line "
                     + lineNumber + " " + e);
             throw new JMeterError(e);
@@ -1143,7 +1139,7 @@ public final class CSVSaveService {
      * Handles DOS (CRLF), Unix (LF), and Mac (CR) line-endings equally.
      * 
      * @param line
-     *            input line
+     *            input line - not {@code null}
      * @param delim
      *            delimiter (e.g. comma)
      * @return array of strings

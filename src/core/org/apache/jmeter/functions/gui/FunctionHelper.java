@@ -35,7 +35,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -69,31 +68,28 @@ public class FunctionHelper extends JDialog implements ActionListener, ChangeLis
         init();
         JMeterUtils.addLocaleChangeListener(this);
     }
-    
+
     /**
      * Allow Dialog to be closed by ESC key
      */
     @Override
     protected JRootPane createRootPane() {
         JRootPane rootPane = new JRootPane();
-        KeyStroke stroke = KeyStrokes.ESC;
         javax.swing.Action escapeAction = new AbstractAction("ESCAPE") { 
-            /**
-             * 
-             */
+
             private static final long serialVersionUID = -4036804004190858925L;
 
             @Override
-            public void actionPerformed(ActionEvent actionEvent) { 
+            public void actionPerformed(ActionEvent actionEvent) {
                 setVisible(false);
             } 
         };
         rootPane.getActionMap().put(escapeAction.getValue(Action.NAME), escapeAction);
         InputMap inputMap = rootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        inputMap.put(stroke, escapeAction.getValue(Action.NAME));
+        inputMap.put(KeyStrokes.ESC, escapeAction.getValue(Action.NAME));
         return rootPane;
     }
-    
+
     private void init() {
         parameterPanel = new ArgumentsPanel(JMeterUtils.getResString("function_params"), false); //$NON-NLS-1$
         initializeFunctionList();
@@ -112,7 +108,7 @@ public class FunctionHelper extends JDialog implements ActionListener, ChangeLis
         generateButton.addActionListener(this);
         resultsPanel.add(generateButton);
         this.getContentPane().add(resultsPanel, BorderLayout.SOUTH);
-        
+
         this.pack();
         ComponentUtil.centerComponentInWindow(this);
     }

@@ -31,7 +31,6 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.SocketException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -54,6 +53,7 @@ import org.apache.commons.cli.avalon.CLOptionDescriptor;
 import org.apache.commons.cli.avalon.CLUtil;
 import org.apache.jmeter.control.ReplaceableController;
 import org.apache.jmeter.engine.ClientJMeterEngine;
+import org.apache.jmeter.engine.DistributedRunner;
 import org.apache.jmeter.engine.JMeterEngine;
 import org.apache.jmeter.engine.RemoteJMeterEngineImpl;
 import org.apache.jmeter.engine.StandardJMeterEngine;
@@ -244,14 +244,12 @@ public class JMeter implements JMeterPlugin {
         main.setVisible(true);
         ActionRouter.getInstance().actionPerformed(new ActionEvent(main, 1, ActionNames.ADD_ALL));
         if (testFile != null) {
-            FileInputStream reader = null;
             try {
                 File f = new File(testFile);
                 log.info("Loading file: " + f);
                 FileServer.getFileServer().setBaseForScript(f);
 
-                reader = new FileInputStream(f);
-                HashTree tree = SaveService.loadTree(reader);
+                HashTree tree = SaveService.loadTree(f);
 
                 GuiPackage.getInstance().setTestPlanFile(f.getAbsolutePath());
 
@@ -262,8 +260,6 @@ public class JMeter implements JMeterPlugin {
             } catch (Exception e) {
                 log.error("Failure loading test file", e);
                 JMeterUtils.reportErrorToUser(e.toString());
-            } finally {
-                JOrphanUtils.closeQuietly(reader);
             }
         } else {
             JTree jTree = GuiPackage.getInstance().getMainFrame().getTree();
@@ -331,6 +327,8 @@ public class JMeter implements JMeterPlugin {
             logProperty("os.arch"); //$NON-NLS-1$
             logProperty("os.version"); //$NON-NLS-1$
             logProperty("file.encoding"); // $NON-NLS-1$
+            log.info("Max memory     ="+ Runtime.getRuntime().maxMemory());
+            log.info("Available Processors ="+ Runtime.getRuntime().availableProcessors());
             log.info("Default Locale=" + Locale.getDefault().getDisplayName());
             log.info("JMeter  Locale=" + JMeterUtils.getLocale().getDisplayName());
             log.info("JMeterHome="     + JMeterUtils.getJMeterHome());
@@ -743,7 +741,6 @@ public class JMeter implements JMeterPlugin {
 
     // run test in batch mode
     private void runNonGui(String testFile, String logFile, boolean remoteStart, String remote_hosts_string) {
-        FileInputStream reader = null;
         try {
             File f = new File(testFile);
             if (!f.exists() || !f.isFile()) {
@@ -752,10 +749,7 @@ public class JMeter implements JMeterPlugin {
             }
             FileServer.getFileServer().setBaseForScript(f);
 
-            reader = new FileInputStream(f);
-            log.info("Loading file: " + f);
-
-            HashTree tree = SaveService.loadTree(reader);
+            HashTree tree = SaveService.loadTree(f);
 
             @SuppressWarnings("deprecation") // Deliberate use of deprecated ctor
             JMeterTreeModel treeModel = new JMeterTreeModel(new Object());// Create non-GUI version to avoid headless problems
@@ -811,42 +805,22 @@ public class JMeter implements JMeterPlugin {
                 engines.add(engine);
             } else {
                 java.util.StringTokenizer st = new java.util.StringTokenizer(remote_hosts_string, ",");//$NON-NLS-1$
-                List<String> failingEngines = new ArrayList<String>(st.countTokens());
+                List<String> hosts = new LinkedList<String>();
                 while (st.hasMoreElements()) {
-                    String el = (String) st.nextElement();
-                    println("Configuring remote engine for " + el);
-                    log.info("Configuring remote engine for " + el);
-                    JMeterEngine eng = doRemoteInit(el.trim(), tree);
-                    if (null != eng) {
-                        engines.add(eng);
-                    } else {
-                        failingEngines.add(el);
-                        println("Failed to configure "+el);
-                    }
+                    hosts.add((String) st.nextElement());
                 }
-                if (engines.isEmpty()) {
-                    println("No remote engines were started.");
-                    return;
-                }
-                if(failingEngines.size()>0) {
-                    throw new IllegalArgumentException("The following remote engines could not be configured:"+failingEngines);
-                }
-                println("Starting remote engines");
-                log.info("Starting remote engines");
-                long now=System.currentTimeMillis();
-                println("Starting the test @ "+new Date(now)+" ("+now+")");
-                for (JMeterEngine engine : engines) {
-                    engine.runTest();
-                }
-                println("Remote engines have been started");
-                log.info("Remote engines have been started");
+                
+                DistributedRunner distributedRunner=new DistributedRunner(this.remoteProps);
+                distributedRunner.setStdout(System.out);
+                distributedRunner.setStdErr(System.err);
+                distributedRunner.init(hosts, tree);
+                engines.addAll(distributedRunner.getEngines());
+                distributedRunner.start();
             }
             startUdpDdaemon(engines);
         } catch (Exception e) {
             System.out.println("Error in NonGUIDriver " + e.toString());
             log.error("Error in NonGUIDriver", e);
-        } finally {
-            JOrphanUtils.closeQuietly(reader);
         }
     }
 
@@ -927,22 +901,6 @@ public class JMeter implements JMeterPlugin {
             rc = (ReplaceableController) item.clone();
         }
         return rc;
-    }
-
-    private JMeterEngine doRemoteInit(String hostName, HashTree testTree) {
-        JMeterEngine engine = null;
-        try {
-            engine = new ClientJMeterEngine(hostName);
-        } catch (Exception e) {
-            log.fatalError("Failure connecting to remote host: "+hostName, e);
-            System.err.println("Failure connecting to remote host: "+hostName+" "+e);
-            return null;
-        }
-        engine.configure(testTree);
-        if (!remoteProps.isEmpty()) {
-            engine.setProperties(remoteProps);
-        }
-        return engine;
     }
 
     /*
@@ -1152,7 +1110,7 @@ public class JMeter implements JMeterPlugin {
 
     private static void waitForSignals(final List<JMeterEngine> engines, DatagramSocket socket) {
         byte[] buf = new byte[80];
-        System.out.println("Waiting for possible shutdown message on port "+socket.getLocalPort());
+        System.out.println("Waiting for possible Shutdown/StopTestNow/Heapdump message on port "+socket.getLocalPort());
         DatagramPacket request = new DatagramPacket(buf, buf.length);
         try {
             while(true) {

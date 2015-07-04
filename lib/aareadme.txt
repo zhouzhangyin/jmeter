@@ -28,7 +28,7 @@ bsh-2.0b5.jar (org.bsh)
 -------------
 - BeanShell test elements
 
-commons-codec-1.9
+commons-codec-1.10
 -----------------
 http://commons.apache.org/downloads/download_codec.cgi
 - used by commons-httpclient-3.1
@@ -71,10 +71,25 @@ commons-logging-1.2
 http://commons.apache.org/downloads/download_logging.cgi
 - httpclient
 
+commons-math3-3.5
+-----------------
+http://commons.apache.org/proper/commons-math/download_math.cgi
+- BackendListener
+
 commons-net-3.3
 -----------------
 http://commons.apache.org/downloads/download_net.cgi
 - FTPSampler
+
+commons-pool2-2.3
+-----------------
+http://commons.apache.org/proper/commons-pool/download_pool.cgi
+- BackendListener
+
+dnsjava-2.1.7
+-----------------
+http://www.dnsjava.org/download/
+- DNSCacheManager
 
 excalibur-datasource-1.1.1 (org.apache.avalon.excalibur.datasource)
 --------------------------
@@ -109,17 +124,17 @@ http://www.jdom.org/downloads/index.html
 - XMLAssertion, JMeterTest ONLY
 - Anakia
 
-jodd-core-3.6.3
+jodd-core-3.6.4
 --------
 http://www.jodd.org/
 - CSS/JQuery like extractor dependency
 
-jodd-lagarto-3.6.3
+jodd-lagarto-3.6.4
 --------
 http://jodd.org/doc/csselly/
 - CSS/JQuery like extractor
 
-jodd-log-3.6.3
+jodd-log-3.6.4
 --------
 http://www.jodd.org/
 - CSS/JQuery like extractor dependency
@@ -129,10 +144,12 @@ jsoup-1.8.1
 http://www.jsoup.org/
 - CSS/JQuery like extractor
 
-rhino-1.7R4
+rhino-1.7R5
 --------
 http://www.mozilla.org/rhino/download.html
 - javascript function
+- IfController
+- WhileController
 - BSF (Javascript)
 
 jTidy-r938
@@ -141,7 +158,7 @@ jTidy-r938
 - org.xml.sax - various
 - XPathUtil (XPath assertion)
 
-junit 4.11
+junit 4.12
 -----------
 - unit tests, JUnit sampler
 
@@ -165,7 +182,7 @@ oro-2.0.8
 http://jakarta.apache.org/site/downloads/downloads_oro.cgi
 - regular expressions: various
 
-rsyntaxtextarea-2.5.3
+rsyntaxtextarea-2.5.6
 ---------------------
 http://fifesoft.com/rsyntaxtextarea/
 - syntax coloration
@@ -175,7 +192,7 @@ serialiser-2.7.1
 http://www.apache.org/dyn/closer.cgi/xml/xalan-j
 - xalan
 
-slf4j-api-1.7.5, slf4j-nop-1.7.5
+slf4j-api-1.7.10, slf4j-nop-1.7.10
 ----------------
 http://www.slf4j.org/
 - jodd-core
@@ -184,7 +201,7 @@ soap-2.3.1
 ----------
 - WebServiceSampler ONLY
 
-tika-1.7
+tika-1.9
 --------------
 http://tika.apache.org/
 - Regular Expression Extractor
