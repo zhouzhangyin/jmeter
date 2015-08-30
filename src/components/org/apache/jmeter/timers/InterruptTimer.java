@@ -46,7 +46,7 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
 
     private ScheduledFuture<?> future;
     
-    private final ScheduledExecutorService execService;
+    private final transient ScheduledExecutorService execService;
     
     private final boolean debug;
 
@@ -104,14 +104,16 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
         final Interruptible sampler = (Interruptible) samp;
         Runnable run=new Runnable() {
             public void run() {
-                  boolean interrupted = sampler.interrupt();
-                  if (interrupted) {
-                      LOG.warn("Done interrupting " + getInfo(samp));
-                  } else {
-                      if (debug) {
-                          LOG.debug("Didn't interrupt: " + getInfo(samp));                          
-                      }
-                  }
+                long start = System.nanoTime();
+                boolean interrupted = sampler.interrupt();
+                long end = System.nanoTime();
+                if (interrupted) {
+                    LOG.warn("Done interrupting " + getInfo(samp) + " took(ns) " + (end-start));
+                } else {
+                    if (debug) {
+                        LOG.debug("Didn't interrupt: " + getInfo(samp) + " took(ns) " + (end-start));
+                    }
+                }
             }
         };
 
