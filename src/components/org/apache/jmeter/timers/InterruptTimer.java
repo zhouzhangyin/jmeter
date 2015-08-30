@@ -106,12 +106,12 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
             public void run() {
                 long start = System.nanoTime();
                 boolean interrupted = sampler.interrupt();
-                long end = System.nanoTime();
+                String elapsed = Double.toString((double)(System.nanoTime()-start)/ 1000000000)+" secs";
                 if (interrupted) {
-                    LOG.warn("Done interrupting " + getInfo(samp) + " took(ns) " + (end-start));
+                    LOG.warn("Done interrupting " + getInfo(samp) + " took " + elapsed);
                 } else {
                     if (debug) {
-                        LOG.debug("Didn't interrupt: " + getInfo(samp) + " took(ns) " + (end-start));
+                        LOG.debug("Didn't interrupt: " + getInfo(samp) + " took " + elapsed);
                     }
                 }
             }
@@ -164,7 +164,7 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
             if (!future.isDone()) {
                 boolean cancelled = future.cancel(false);
                 if (debug) {
-                    LOG.debug("Cancelled the task: @" + System.identityHashCode(future) + " with result " + cancelled);
+                    LOG.debug("Cancelled timer: @" + System.identityHashCode(future) + " with result " + cancelled);
                 }
             }
             future = null;
