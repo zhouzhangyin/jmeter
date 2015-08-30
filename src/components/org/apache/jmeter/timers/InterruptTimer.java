@@ -78,7 +78,7 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
      * No-arg constructor.
      */
     public InterruptTimer() {
-        LOG.setPriority(org.apache.log.Priority.DEBUG); // for local debugging when enabled
+//        LOG.setPriority(org.apache.log.Priority.DEBUG); // for local debugging when enabled
         debug = LOG.isDebugEnabled();
         execService = getExecutorService();
         if (debug) {
