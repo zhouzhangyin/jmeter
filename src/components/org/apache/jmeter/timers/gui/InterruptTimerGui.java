@@ -43,6 +43,10 @@ public class InterruptTimerGui extends AbstractTimerGui {
 
     private JTextField timeoutField;
 
+    // For testing different schedule types
+    private JTextField taskType;
+    private JTextField callDelay;
+ 
     /**
      * No-arg constructor.
      */
@@ -88,6 +92,8 @@ public class InterruptTimerGui extends AbstractTimerGui {
     public void modifyTestElement(TestElement timer) {
         this.configureTestElement(timer);
         ((InterruptTimer) timer).setTimeout(timeoutField.getText());
+        ((InterruptTimer) timer).setType(taskType.getText());
+        ((InterruptTimer) timer).setCallDelay(callDelay.getText());
     }
 
     /**
@@ -99,6 +105,8 @@ public class InterruptTimerGui extends AbstractTimerGui {
     public void configure(TestElement el) {
         super.configure(el);
         timeoutField.setText(((InterruptTimer) el).getTimeout());
+        taskType.setText(((InterruptTimer) el).getType());
+        callDelay.setText(((InterruptTimer) el).getCallDelay());
     }
 
     /**
@@ -117,6 +125,14 @@ public class InterruptTimerGui extends AbstractTimerGui {
         timeoutField = new JTextField(6);
         timeoutField.setText(DEFAULT_TIMEOUT);
         timeoutPanel.add(timeoutField);
+
+        timeoutPanel.add(new JLabel("task type"));
+        taskType = new JTextField(6);
+        timeoutPanel.add(taskType);
+
+        timeoutPanel.add(new JLabel("call delay"));
+        callDelay = new JTextField(6);
+        timeoutPanel.add(callDelay);
         add(timeoutPanel);
     }
 

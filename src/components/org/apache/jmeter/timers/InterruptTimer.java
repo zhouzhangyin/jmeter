@@ -1,6 +1,25 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
+
 package org.apache.jmeter.timers;
 
 import java.io.Serializable;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -18,6 +37,11 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
 
+/**
+ * 
+ * Sample timeout implementation using Executor threads
+ *
+ */
 public class InterruptTimer extends AbstractTestElement implements Timer, Serializable, ThreadListener {
 
     private static final long serialVersionUID = 1L;
@@ -102,23 +126,50 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
             return 0; // Cannot time out in this case
         }
         final Interruptible sampler = (Interruptible) samp;
+        
+        if ("CALL".equals(getType())) {
+        Callable<Object> call = new Callable<Object>() {
+            @Override
+            public Object call() throws Exception {
+                long start = System.nanoTime();
+                boolean interrupted = sampler.interrupt();
+                String elapsed = Double.toString((double)(System.nanoTime()-start)/ 1000000000)+" secs";
+                if (interrupted) {
+                    LOG.warn("Call Done interrupting " + getInfo(samp) + " took " + elapsed);
+                } else {
+                    if (debug) {
+                        LOG.debug("Call Didn't interrupt: " + getInfo(samp) + " took " + elapsed);
+                    }
+                }
+                final long delay = Long.parseLong(getCallDelay());
+                if (delay > 0) {
+                    LOG.debug("Call will wait " + delay);
+                    Thread.sleep(delay);
+                }
+                return null;
+            }
+            
+        };
+        // schedule the interrupt to occur and save for possible cancellation 
+        future = execService.schedule(call, timeout, TimeUnit.MILLISECONDS);
+        } else {
         Runnable run=new Runnable() {
             public void run() {
                 long start = System.nanoTime();
                 boolean interrupted = sampler.interrupt();
                 String elapsed = Double.toString((double)(System.nanoTime()-start)/ 1000000000)+" secs";
                 if (interrupted) {
-                    LOG.warn("Done interrupting " + getInfo(samp) + " took " + elapsed);
+                    LOG.warn("Run Done interrupting " + getInfo(samp) + " took " + elapsed);
                 } else {
                     if (debug) {
-                        LOG.debug("Didn't interrupt: " + getInfo(samp) + " took " + elapsed);
+                        LOG.debug("Run Didn't interrupt: " + getInfo(samp) + " took " + elapsed);
                     }
                 }
             }
         };
-
-        // schedule the interrupt to occur and save for possible cancellation 
-        future = execService.schedule(run, timeout, TimeUnit.MILLISECONDS);
+            // schedule the interrupt to occur and save for possible cancellation 
+            future = execService.schedule(run, timeout, TimeUnit.MILLISECONDS);
+        }
         if (debug) {
             LOG.debug("Scheduled timer: @" + System.identityHashCode(future) + " " + getInfo(samp));
         }
@@ -169,5 +220,21 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
             }
             future = null;
         }        
+    }
+
+    public void setType(String text) {
+        setProperty("type", text);
+    }
+
+    public void setCallDelay(String text) {
+        setProperty("calldelay", text, "0");
+    }
+
+    public String getType() {
+        return getPropertyAsString("type");
+    }
+
+    public String getCallDelay() {
+        return getPropertyAsString("calldelay","0");
     }
 }
