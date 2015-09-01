@@ -65,6 +65,11 @@ import org.apache.log.Logger;
  */
 public class JMeterThread implements Runnable, Interruptible {
     private static final Logger log = LoggingManager.getLoggerForClass();
+    
+    public static final boolean IMPLEMENTS_SAMPLE_STARTED = JMeterUtils.getPropDefault("temp.sampleStarted", true);
+    static {
+        log.info("IMPLEMENTS_SAMPLE_STARTED="+IMPLEMENTS_SAMPLE_STARTED);
+    }
 
     public static final String PACKAGE_OBJECT = "JMeterThread.pack"; // $NON-NLS-1$
 
@@ -431,7 +436,24 @@ public class JMeterThread implements Runnable, Interruptible {
 
                 // Perform the actual sample
                 currentSampler = sampler;
+                if (IMPLEMENTS_SAMPLE_STARTED) {
+                    for(SampleListener listener : pack.getSampleListeners()) {
+                        try {
+                            TestBeanHelper.prepare((TestElement) listener);
+                            listener.sampleStarted(null);
+                        } catch (RuntimeException e) {
+                            log.error("Detected problem in Listener: ", e);
+                            log.info("Continuing to process further listeners");
+                        }
+                    }                    
+                }
                 SampleResult result = sampler.sample(null); // TODO: remove this useless Entry parameter
+                if (IMPLEMENTS_SAMPLE_STARTED) {
+                    for(SampleListener listener : pack.getSampleListeners()) {
+                        // We don't need to prepare these again here
+                        listener.sampleStopped(null);
+                    }                    
+                }
                 currentSampler = null;
 
                 // If we got any results, then perform processing on the result
@@ -452,7 +474,7 @@ public class JMeterThread implements Runnable, Interruptible {
                     checkAssertions(pack.getAssertions(), result, threadContext);
                     // Do not send subsamples to listeners which receive the transaction sample
                     List<SampleListener> sampleListeners = getSampleListeners(pack, transactionPack, transactionSampler);
-                    notifyListeners(sampleListeners, result);
+                    notifyListeners(sampleListeners, result); // TODO could skip the TestBean prepare here?
                     compiler.done(pack);
                     // Add the result as subsample of transaction if we are in a transaction
                     if(transactionSampler != null) {

@@ -27,12 +27,15 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.jmeter.samplers.Interruptible;
+import org.apache.jmeter.samplers.SampleEvent;
+import org.apache.jmeter.samplers.SampleListener;
 import org.apache.jmeter.samplers.Sampler;
 import org.apache.jmeter.testelement.AbstractTestElement;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.ThreadListener;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
+import org.apache.jmeter.threads.JMeterThread;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
@@ -42,7 +45,7 @@ import org.apache.log.Logger;
  * Sample timeout implementation using Executor threads
  *
  */
-public class InterruptTimer extends AbstractTestElement implements Timer, Serializable, ThreadListener {
+public class InterruptTimer extends AbstractTestElement implements Timer, Serializable, ThreadListener, SampleListener {
 
     private static final long serialVersionUID = 1L;
 
@@ -66,7 +69,7 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
         return TPOOLHolder.EXEC_SERVICE;
     }
 
-    private JMeterContext context;
+    private JMeterContext context; // Cache this here to avoid refetching
 
     private ScheduledFuture<?> future;
     
@@ -113,17 +116,43 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
      */
     @Override
     public long delay() {
+        // Check if sampleStarted/Stopped are available
+        // (this is a temp. hack to allow the features to be compared)
+        if (JMeterThread.IMPLEMENTS_SAMPLE_STARTED) {
+            return 0;// we are not using delay
+        }
         if (debug) {
             LOG.debug(whoAmI("delay()", this));
         }
         cancelTask(); // cancel previous if any
+        createTask();
+        return 0;
+    }
+
+    @Override
+    public void sampleStarted(SampleEvent e) {
+        if (debug) {
+            LOG.debug(whoAmI("sampleStarted()", this));
+        }
+        createTask();
+    }
+
+    @Override
+    public void sampleStopped(SampleEvent e) {
+        if (debug) {
+            LOG.debug(whoAmI("sampleStopped()", this));
+        }
+        cancelTask();
+    }
+
+    private void createTask() {
         long timeout = getPropertyAsLong(TIMEOUT); // refetch each time so it can be a variable
         if (timeout <= 0) {
-            return 0;
+            return;
         }
         final Sampler samp = context.getCurrentSampler();
         if (!(samp instanceof Interruptible)) { // may be applied to a whole test 
-            return 0; // Cannot time out in this case
+            return; // Cannot time out in this case
         }
         final Interruptible sampler = (Interruptible) samp;
         
@@ -173,7 +202,6 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
         if (debug) {
             LOG.debug("Scheduled timer: @" + System.identityHashCode(future) + " " + getInfo(samp));
         }
-        return 0;
     }
 
     @Override
@@ -236,5 +264,10 @@ public class InterruptTimer extends AbstractTestElement implements Timer, Serial
 
     public String getCallDelay() {
         return getPropertyAsString("calldelay","0");
+    }
+
+    @Override
+    public void sampleOccurred(SampleEvent e) {
+        // Not used
     }
 }
