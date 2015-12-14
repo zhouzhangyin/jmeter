@@ -16,7 +16,7 @@
  *
  */
 
-package org.apache.jmeter.timers.gui;
+package org.apache.jmeter.modifiers.gui;
 
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -24,16 +24,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.jmeter.modifiers.SampleTimeout;
+import org.apache.jmeter.processor.gui.AbstractPreProcessorGui;
 import org.apache.jmeter.testelement.TestElement;
-import org.apache.jmeter.timers.InterruptTimer;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.gui.layout.VerticalLayout;
 
 /**
- * The GUI for InterruptTimer.
- *
+ * The GUI for SampleTimeout.
  */
-public class InterruptTimerGui extends AbstractTimerGui {
+public class SampleTimeoutGui extends AbstractPreProcessorGui {
+
     private static final long serialVersionUID = 240L;
 
     /**
@@ -43,14 +44,10 @@ public class InterruptTimerGui extends AbstractTimerGui {
 
     private JTextField timeoutField;
 
-    // For testing different schedule types
-    private JTextField taskType;
-    private JTextField callDelay;
- 
     /**
      * No-arg constructor.
      */
-    public InterruptTimerGui() {
+    public SampleTimeoutGui() {
         init();
     }
 
@@ -68,7 +65,7 @@ public class InterruptTimerGui extends AbstractTimerGui {
 
     @Override
     public String getLabelResource() {
-        return "interrupt_timer_title"; // $NON-NLS-1$
+        return "sample_timeout_title"; // $NON-NLS-1$
     }
 
     /**
@@ -78,7 +75,7 @@ public class InterruptTimerGui extends AbstractTimerGui {
      */
     @Override
     public TestElement createTestElement() {
-        InterruptTimer timer = new InterruptTimer();
+        SampleTimeout timer = new SampleTimeout();
         modifyTestElement(timer);
         return timer;
     }
@@ -91,9 +88,7 @@ public class InterruptTimerGui extends AbstractTimerGui {
     @Override
     public void modifyTestElement(TestElement timer) {
         this.configureTestElement(timer);
-        ((InterruptTimer) timer).setTimeout(timeoutField.getText());
-        ((InterruptTimer) timer).setType(taskType.getText());
-        ((InterruptTimer) timer).setCallDelay(callDelay.getText());
+        ((SampleTimeout) timer).setTimeout(timeoutField.getText());
     }
 
     /**
@@ -104,9 +99,7 @@ public class InterruptTimerGui extends AbstractTimerGui {
     @Override
     public void configure(TestElement el) {
         super.configure(el);
-        timeoutField.setText(((InterruptTimer) el).getTimeout());
-        taskType.setText(((InterruptTimer) el).getType());
-        callDelay.setText(((InterruptTimer) el).getCallDelay());
+        timeoutField.setText(((SampleTimeout) el).getTimeout());
     }
 
     /**
@@ -119,20 +112,13 @@ public class InterruptTimerGui extends AbstractTimerGui {
         add(makeTitlePanel());
 
         Box timeoutPanel = Box.createHorizontalBox();
-        JLabel timeoutLabel = new JLabel(JMeterUtils.getResString("interrupt_timer_timeout"));//$NON-NLS-1$
+        JLabel timeoutLabel = new JLabel(JMeterUtils.getResString("sample_timeout_timeout"));//$NON-NLS-1$
         timeoutPanel.add(timeoutLabel);
 
         timeoutField = new JTextField(6);
         timeoutField.setText(DEFAULT_TIMEOUT);
         timeoutPanel.add(timeoutField);
 
-        timeoutPanel.add(new JLabel("task type"));
-        taskType = new JTextField(6);
-        timeoutPanel.add(taskType);
-
-        timeoutPanel.add(new JLabel("call delay"));
-        callDelay = new JTextField(6);
-        timeoutPanel.add(callDelay);
         add(timeoutPanel);
     }
 
