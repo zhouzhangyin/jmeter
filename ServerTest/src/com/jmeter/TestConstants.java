@@ -11,7 +11,9 @@ public class TestConstants {
 
     public static final String KEY="yhgt!d%sd*aw%dsa#mng~dsq";
 
+    public static final int Default_So_TimeOut=3000;
 
+    public static final int Default_Connection_TimeOut=3000;
 
 
 

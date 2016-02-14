@@ -12,11 +12,11 @@ import java.io.Serializable;
 /**
  * Created by zhouzhangyin on 16/2/2.
  */
-public class TestHttp extends ApiTestUtil implements Serializable {
+public class TestHttp extends ApiTestUtil  {
 
     private Logger log=getLogger();
 
-    private SampleResult results;
+//    private SampleResult results;
 
     private  String code;
 
@@ -109,60 +109,76 @@ public class TestHttp extends ApiTestUtil implements Serializable {
         log.info("exec runTest...");
 
         results = new SampleResult();
-
+        //发起事务
         results.sampleStart();
 
         setupValues(context);
 
+        if(host.trim().isEmpty() || port.trim().isEmpty()
+                || path.trim().isEmpty() || code.trim().isEmpty()
+                || app_v.trim().isEmpty() || apiversion.trim().isEmpty()
+                || platform.trim().isEmpty() || data.trim().isEmpty() ){
 
-        HttpRequester request = new HttpRequester(host+":"+port+path);
+            log.info("---host,port及等不能为空");
+
+            results.setSuccessful(false);
+
+        }else {
+
+            HttpRequester request = new HttpRequester(host + ":" + port + path);
+           //添加参数前需先清空,不然设置循环次数时会重复加参
+            HttpRequester.params.clear();
+
+            HttpRequester.addParams("code", code);
+
+            HttpRequester.addParams("app_v", app_v);
+
+            HttpRequester.addParams("apiversion", apiversion);
+
+            HttpRequester.addParams("platorm", platform);
+
+            HttpRequester.addParams("data", data);
 
 
-        HttpRequester.addParams("code",code);
+            for (int i = 0; i < HttpRequester.params.size(); i++) {
 
-        HttpRequester.addParams("app_v",app_v);
+                log.info("!!!" + HttpRequester.params.get(i));
 
-        HttpRequester.addParams("apiversion",apiversion);
+            }
+            //发起post请求
+            String resp = request.sendPost();
 
-        HttpRequester.addParams("platorm",platform);
+            ;
+            //设置请求数据
 
-        HttpRequester.addParams("data",data);
+            results.setSamplerData(HttpRequester.params.toString());
+
+            //        results.setSamplerData(HttpRequester.httppost.getEntity().toString());
+
+//        results.setSamplerData(HttpRequester.httppost.getParams().toString());
+            //设置返回数据
+            results.setResponseData(resp);
+           //设置数据类型
+            results.setDataType(SampleResult.TEXT);
 
 
+            if (resp != null) {
 
-        for (int i = 0; i<HttpRequester.params.size(); i++) {
+                log.info("@@@@@" + resp);
 
-            log.info("!!!"+HttpRequester.params.get(i));
+                results.setSuccessful(true);
+
+            } else {
+
+                results.setResponseMessage("返回失败");
+
+                results.setSuccessful(false);
+            }
+
 
         }
 
-        String resp = request.sendPost();
-        //设置请求数据
-
-        results.setSamplerData(HttpRequester.params.toString());
-
-        //        results.setSamplerData(HttpRequester.httppost.getEntity().toString());
-
-//        results.setSamplerData(HttpRequester.httppost.getParams().toString());
-
-        results.setResponseData(resp);
-
-        results.setDataType(SampleResult.TEXT);
-
-
-                    if(resp!=null){
-
-                        log.info("@@@@@"+resp);
-
-                        results.setSuccessful(true);
-
-                    }else{
-
-                        results.setResponseMessage("返回失败");
-
-                        results.setSuccessful(false);
-                    }
-
+      //结束事物
         results.sampleEnd();
 
 
@@ -170,6 +186,13 @@ public class TestHttp extends ApiTestUtil implements Serializable {
     }
 
 
+    @Override
+    public void teardownTest(JavaSamplerContext context){
+
+        HttpRequester.params.clear();
+
+        log.info("!!!Test End!!!");
+    }
 
 
 

@@ -13,6 +13,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 
 import java.io.BufferedReader;
@@ -41,9 +42,19 @@ public class HttpRequester {
 
         httpclient = new DefaultHttpClient();
 
+        httpclient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,TestConstants.Default_Connection_TimeOut);//连接超时时间
+
+        httpclient.getParams().setIntParameter(CoreConnectionPNames.SO_TIMEOUT,TestConstants.Default_So_TimeOut);//数据传输超时时间
+
         httppost=new HttpPost("http://"+url);
     }
 
+
+    /**
+     *
+     * 发起post请求
+     * @return
+     */
 
    public static String sendPost(){
 
@@ -86,7 +97,7 @@ public class HttpRequester {
 
            return resp;
 
-       } catch (IOException e) {
+       } catch (Exception e) {
 
            e.printStackTrace();
        }
@@ -94,7 +105,12 @@ public class HttpRequester {
    }
 
 
-
+    /**
+     * 添加请求参数
+     * @param key
+     * @param value
+     * @return
+     */
     public static List<BasicNameValuePair> addParams(String key,String value) {
 
         params.add(new BasicNameValuePair(key,value));
