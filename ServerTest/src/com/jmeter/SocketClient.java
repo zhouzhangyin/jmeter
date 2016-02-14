@@ -10,10 +10,7 @@ import java.net.SocketTimeoutException;
 	
 	public class SocketClient {
 		 
-		 
-		 
-		private static final int Default_Request_TimeOut = 3*1000;
-		private static final int Default_Response_TimeOut=10*1000;
+
 		private Socket s;
 		private OutputStream serverOutput=null;
 		private InputStream serverInput =null;
@@ -30,7 +27,7 @@ import java.net.SocketTimeoutException;
 		 
 		this.host=host;
 		this.port=port;
-		this.timeout=timeOut;
+		this.timeout= String.valueOf(TestConstants.Default_Response_TimeOut);
 		openConnection();
 		
 		}
@@ -69,7 +66,7 @@ import java.net.SocketTimeoutException;
 		}
 		else {
 		 
-		s.setSoTimeout(Default_Request_TimeOut);//3秒
+		s.setSoTimeout(TestConstants.Default_Response_TimeOut);
 		 
 		}
 		

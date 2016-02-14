@@ -18,13 +18,13 @@ public class TestSocket extends AbstractJavaSamplerClient {
 	private SampleResult results;
 	
 	private String host;
-	
+
 	private String port;
-	
+
 	private String Data;
-	
+
 	private String RequestTimeout;
-	
+
 	private String ResponseTimeout;
 
 	
