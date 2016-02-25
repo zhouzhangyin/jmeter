@@ -7,11 +7,15 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * Created by zhouzhangyin on 16/2/3.
  */
-public class EncryptionAndDecryption {
+public class Funcations {
 
 
     public static String encryptThreeDESECB(String src,String key)
@@ -62,6 +66,77 @@ public class EncryptionAndDecryption {
         }
 
     }
+
+
+
+
+    /**
+     * byte数组转换成16进制字符数组
+     * @param src
+     * @return
+     */
+    public static String bytesToHexString(byte[] src){
+        StringBuilder stringBuilder = new StringBuilder("");
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                stringBuilder.append(0);
+            }
+            stringBuilder.append(hv);
+        }
+        return stringBuilder.toString();
+    }
+
+    /**
+     * 从文件中获取字符数组
+     * @param filePath
+     * @return
+     */
+
+    public  byte[] getBytesFromFile(String filePath) {
+        byte[] ret = null;
+        File file = new File(filePath);
+        try {
+            if (file  == null) {
+                // log.error("helper:the file is null!");
+                return null;
+            }
+            FileInputStream in = new FileInputStream(file);
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream(4096);
+
+            byte[] b = new byte[4096];
+            int n;
+
+            while ((n = in.read(b)) != -1) {
+
+                out.write(b, 0, n);
+            }
+            in.close();
+
+            out.close();
+
+            ret = out.toByteArray();
+
+        } catch (IOException e) {
+            // log.error("helper:get bytes from file process error!");
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+
+
+
+
+
+
+
+
 
 
 

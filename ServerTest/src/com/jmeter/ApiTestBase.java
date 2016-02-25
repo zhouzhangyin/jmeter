@@ -11,7 +11,7 @@ import java.util.Iterator;
 /**
  * Created by zhouzhangyin on 16/2/2.
  */
-public class ApiTestUtil extends AbstractJavaSamplerClient {
+public class ApiTestBase extends AbstractJavaSamplerClient {
 
 
     public Logger log=getLogger();
@@ -58,7 +58,7 @@ public class ApiTestUtil extends AbstractJavaSamplerClient {
 
              argsIt.hasNext();
 
-             log.info("--循环取参: "+( new StringBuilder()).append(name).append( "=" ).append(context.getParameter(name)).toString()))
+             log.info("--循环取参(加密前): "+( new StringBuilder()).append(name).append( "=" ).append(context.getParameter(name)).toString()))
 
             name= (String) argsIt.next();
 
@@ -74,15 +74,15 @@ public class ApiTestUtil extends AbstractJavaSamplerClient {
 
     public void setupValues(JavaSamplerContext context) {
 
-        host = context.getParameter( "host","");
+        host = context.getParameter( "host","").trim();
 
-        port =context.getParameter( "port","");
+        port =context.getParameter( "port","").trim();
 
-        path =context.getParameter("path","");
+        path =context.getParameter("path","").trim();
 
-        RequestTimeout = context.getParameter( "RequestTimeout","");
+        RequestTimeout = context.getParameter( "RequestTimeout","").trim();
 
-        ResponseTimeout = context.getParameter( "ResponseTimeout","");
+        ResponseTimeout = context.getParameter( "ResponseTimeout","").trim();
 
 //        Data = context.getParameter( "Data", "");
 
