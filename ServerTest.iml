@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$USER_HOME$/java/jemter/lib/logkit-2.0.jar!/" />
+    <libelement value="jar://$USER_HOME$/java/jemter/lib/ext/ApacheJMeter_core.jar!/" />
+    <libelement value="jar://$USER_HOME$/java/jemter/lib/ext/ApacheJMeter_java.jar!/" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/SocketTest/src" expected_position="0" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/SocketTest/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/ServerTest">
+      <sourceFolder url="file://$MODULE_DIR$/ServerTest/src" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
+    <orderEntry type="module-library" exported="">
+      <library name="junit4">
+        <CLASSES>
+          <root url="jar://$APPLICATION_HOME_DIR$/lib/junit-4.12.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="logkit-2.0.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/java/jemter/lib/logkit-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="ApacheJMeter_core.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/java/jemter/lib/ext/ApacheJMeter_core.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="ApacheJMeter_java.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/java/jemter/lib/ext/ApacheJMeter_java.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="ApacheJMeter_core" level="project" />
+    <orderEntry type="library" name="httpcore-4.2.5" level="project" />
+    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" name="ApacheJMeter_core1" level="project" />
+  </component>
+</module>
