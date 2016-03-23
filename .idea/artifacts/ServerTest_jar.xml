@@ -1,19 +1,18 @@
 <component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="ServerTest:jar">
+  <artifact type="jar" name="ServerTest:jar">
     <output-path>$USER_HOME$/Desktop</output-path>
     <root id="archive" name="ServerTest.jar">
       <element id="module-output" name="ServerTest" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/junit-4.12.jar" path-in-jar="/" />
+      <element id="library" level="module" name="ApacheJMeter_java.jar" module-name="ServerTest" />
       <element id="extracted-dir" path="$PROJECT_DIR$/ServerTest/libs/ApacheJMeter_core.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/ServerTest/libs/ApacheJMeter_java.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/ServerTest/libs/httpclient-4.2.6.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/ServerTest/libs/logkit-2.0.jar" path-in-jar="/" />
-      <element id="library" level="project" name="httpcore-4.2.5" />
-      <element id="library" level="project" name="libs" />
-      <element id="extracted-dir" path="$USER_HOME$/java/jemter/lib/logkit-2.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/lib/junit-4.12.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/ServerTest/libs/httpcore-4.2.5.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/java/jemter/lib/ext/ApacheJMeter_java.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/java/jemter/lib/ext/ApacheJMeter_core.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/ServerTest/libs/logkit-2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/ServerTest/libs/protobuf-java-2.6.1.jar" path-in-jar="/" />
+      <element id="library" level="module" name="logkit-2.0.jar" module-name="ServerTest" />
+      <element id="library" level="module" name="ApacheJMeter_core.jar" module-name="ServerTest" />
     </root>
   </artifact>
 </component>

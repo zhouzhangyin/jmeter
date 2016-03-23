@@ -132,10 +132,41 @@ public class Funcations {
 
 
 
+    /**
+     * 将Byte数组转换为int类型 *
+     *
+     * @param byteArray 长度必须是4
+     * @return
+     */
+    public static int byteArray2Int(byte[] byteArray) {
+        if (byteArray == null || byteArray.length != 4) {
+            throw new IllegalArgumentException("The byte arrays length must be 4 !");
+        }
+        int value = 0;
+        value += (byteArray[0] & 0x000000FF) << 24;
+        value += (byteArray[1] & 0x000000FF) << 16;
+        value += (byteArray[2] & 0x000000FF) << 8;
+        value += (byteArray[3] & 0x000000FF) << 0;
+        return value;
+    }
 
 
+    /**
+     * 将int类型转换为byte数组 *
+     *
+     * @param number
+     * @return
+     */
+    public static byte[] int2ByteArray(int number) {
+        return new byte[] { (byte) ((number >> 24) & 0xFF), (byte) ((number >> 16) & 0xFF), (byte) ((number >> 8) & 0xFF),
+                (byte) (number & 0xFF) };
 
+    }
 
+    public static byte[] int2Byte(int number){
+        return new byte[] {
+                (byte) (number & 0xFF) };
+    }
 
 
 

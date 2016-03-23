@@ -52,9 +52,15 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="ApacheJMeter_core" level="project" />
-    <orderEntry type="library" name="httpcore-4.2.5" level="project" />
     <orderEntry type="library" name="libs" level="project" />
-    <orderEntry type="library" name="ApacheJMeter_core1" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/ServerTest/libs/protobuf-java-2.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -1,4 +1,6 @@
 package com.jmeter;
+import com.jmeter.protocol.MsgProto;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
@@ -11,6 +13,7 @@ import static com.sun.org.apache.xml.internal.security.utils.JavaUtils.getBytesF
 
 
 public class SocketClient {
+
 
 
 		private Socket s;
@@ -337,7 +340,40 @@ public class SocketClient {
 
 
 
-		public char[] getChars(byte[] bytes) {
+
+
+	/**
+	 * 接收数据
+	 *
+	 * @return 数据字符串
+	 */
+	public byte[] rcvProtoBuf() throws Exception {
+
+
+		byte[] b = new byte[1024];
+
+		int length = serverInput.read(b);
+
+		byte[] pb = new byte[length];
+
+		if (length>0) {
+
+			 for(int i=0;i<length;i++){
+
+				 pb[i]=b[i];
+			 }
+
+
+			return pb;
+		}
+
+
+		return null;
+
+	}
+
+
+	public char[] getChars(byte[] bytes) {
 			Charset cs = Charset.forName ("UTF-8");
 			ByteBuffer bb = ByteBuffer.allocate (bytes.length);
 			bb.put (bytes);
