@@ -2,3 +2,4 @@
 SocketTest/bin/*
 .idea/*
 *.DS_Store
+*.log
